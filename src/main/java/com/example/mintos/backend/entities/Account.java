@@ -4,6 +4,7 @@ package com.example.mintos.backend.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.util.Set;
@@ -28,6 +29,7 @@ public class Account {
     private String currency;
 
     @Column(nullable = false)
+    @Min(0)
     private Double amount;
 
     @OneToMany(mappedBy = "accountFrom")

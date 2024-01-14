@@ -42,12 +42,23 @@ export class AppComponent {
 
   }
 
-  onClientChange(client: Client | undefined) {
+  onClientChange(client: Client) {
+    this.selectedAccount = undefined;
+    this.fetchAccounts(client);
+  }
+
+  fetchAccounts(client: Client | undefined){
     if(!client) {
       return;
     }
-    this.selectedAccount = undefined;
-    this.accountService.fetchAccounts(client).subscribe(response => this.accounts = response._embedded.account);
+    this.accountService.fetchAccounts(client).subscribe(response => {
+      this.accounts = response._embedded.account
+      this.accounts.forEach(account => {
+        if (account?.accountId === this.selectedAccount?.accountId) {
+          this.selectedAccount = account;
+        }
+      })
+    });
   }
 
   addAccount(form: NgForm) {
@@ -56,11 +67,29 @@ export class AppComponent {
     }
     this.accountService.addAccount(form.value.currency, this.selectedClient).subscribe({
       next: (response) => {
-        this.onClientChange(this.selectedClient);
+        this.fetchAccounts(this.selectedClient);
       },
       error: error => {
         console.error(error);
       }
     });
+  }
+
+  addToAccount(form: NgForm, withdraw: boolean = false) {
+    let amount = form.value.amount * (withdraw? -1 : 1);
+
+    if (!this.selectedAccount || this.selectedAccount?.amount + amount < 0) {
+      return;
+    }
+    this.accountService.addFunds(this.selectedAccount, amount).subscribe({
+      next: (response) => {
+        this.fetchAccounts(this.selectedClient);
+      },
+      error: (error) => {
+
+      }
+    });
+
+
   }
 }

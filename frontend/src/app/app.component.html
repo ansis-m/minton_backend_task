@@ -57,5 +57,20 @@
         <button mat-button color="primary" type="submit">Add Account</button>
       </form>
     </mat-expansion-panel>
+    <mat-expansion-panel *ngIf="this.selectedAccount">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Add/Withdraw funds
+        </mat-panel-title>
+        <mat-panel-description>
+          {{selectedAccount.currency}} {{selectedAccount.amount}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form #form="ngForm">
+        <input type="number" name="amount" ngModel required placeholder="0.00">
+        <button mat-button color="primary" type="submit" (click)="addToAccount(form)">Add funds</button>
+        <button mat-button color="primary" type="submit" (click)="addToAccount(form, true)">Withdraw</button>
+      </form>
+    </mat-expansion-panel>
   </mat-accordion>
 </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Client} from "../models/client";
 import {Observable} from "rxjs";
+import {Account} from "../models/account";
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -32,5 +33,13 @@ export class AccountService {
       .set('currency', currency);
 
     return this.http.post(this.apiUrl + '/add', null, { params });
+  }
+
+  addFunds(selectedAccount: Account, amount: number) {
+    const params = new HttpParams()
+      .set('accountId', selectedAccount.accountId)
+      .set('amount', amount);
+
+    return this.http.post(this.apiUrl + '/addfunds', null, { params });
   }
 }

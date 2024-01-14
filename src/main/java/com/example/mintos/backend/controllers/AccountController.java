@@ -1,10 +1,8 @@
 package com.example.mintos.backend.controllers;
 
 import com.example.mintos.backend.entities.Account;
-import com.example.mintos.backend.entities.Client;
-import com.example.mintos.backend.enums.Currency;
-import com.example.mintos.backend.repositories.AccountRepository;
-import com.example.mintos.backend.repositories.ClientRepository;
+import com.example.mintos.backend.services.AccountService;
+import com.example.mintos.backend.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,26 +14,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account")
 public class AccountController {
 
-    @Autowired
-    private AccountRepository accountRepository;
+
+    private ClientService clientService;
+    private AccountService accountService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    AccountController(ClientService clientService, AccountService accountService){
+        this.clientService = clientService;
+        this.accountService = accountService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Account> createAccount(@RequestParam Long clientId, @RequestParam String currency) {
-
-        if (!Currency.contains(currency.toUpperCase().trim())){
-            throw new RuntimeException(String.format("Currency %s not supported", currency));
-        };
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new RuntimeException("Client not found with id " + clientId));
-
-        Account newAccount = new Account();
-        newAccount.setClient(client);
-        newAccount.setCurrency(currency.toUpperCase().trim());
-        newAccount.setAmount(0.0);
-        Account savedAccount = accountRepository.save(newAccount);
+        Account savedAccount = clientService.createAccount(clientId, currency);
         return ResponseEntity.ok(savedAccount);
+    }
+
+
+    @PostMapping("/addfunds")
+    public ResponseEntity<Account> addFunds(@RequestParam Long accountId, @RequestParam Double amount) {
+        Account account = accountService.addFunds(accountId, amount);
+        return ResponseEntity.ok(account);
     }
 }
