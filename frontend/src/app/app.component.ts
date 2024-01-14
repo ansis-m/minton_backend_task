@@ -15,6 +15,9 @@ export class AppComponent {
   accounts: Account[] = [];
   selectedAccount: Account | undefined;
 
+  offset: number = 0;
+  limit: number = 0;
+
   constructor(private clientService: ClientService,
               private accountService: AccountService) {}
 
@@ -90,6 +93,20 @@ export class AppComponent {
       }
     });
 
+
+  }
+
+  getHistory() {
+    console.log(this.limit + "  " + this.offset);
+
+    this.accountService.getTransactions(this.limit, this.offset, this.selectedAccount).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+
+      }
+    });
 
   }
 }

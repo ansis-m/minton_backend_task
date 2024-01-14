@@ -1,6 +1,5 @@
 package com.example.mintos.backend.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +21,5 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     @ToString.Exclude
-    @JsonManagedReference
     private Set<Account> accounts;
-
 }

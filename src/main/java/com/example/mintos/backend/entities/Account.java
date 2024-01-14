@@ -1,8 +1,6 @@
 package com.example.mintos.backend.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -22,7 +20,7 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Client client;
 
     @Column(nullable = false)
@@ -34,11 +32,11 @@ public class Account {
 
     @OneToMany(mappedBy = "accountFrom")
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Transaction> transactionsFrom;
 
     @OneToMany(mappedBy = "accountTo")
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Transaction> transactionsTo;
 }

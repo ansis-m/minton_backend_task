@@ -35,11 +35,21 @@ export class AccountService {
     return this.http.post(this.apiUrl + '/add', null, { params });
   }
 
-  addFunds(selectedAccount: Account, amount: number) {
+  addFunds(selectedAccount: Account, amount: number): Observable<any> {
     const params = new HttpParams()
       .set('accountId', selectedAccount.accountId)
       .set('amount', amount);
 
     return this.http.post(this.apiUrl + '/addfunds', null, { params });
+  }
+
+  getTransactions(limit: number, offset: number, selectedAccount: Account | undefined): Observable<any> {
+    const params = new HttpParams()
+      // @ts-ignore
+      .set('accountId', selectedAccount.accountId)
+      .set('limit', limit)
+      .set('offset', offset)
+
+    return this.http.post(this.apiUrl + '/transactions', null, { params });
   }
 }

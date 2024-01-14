@@ -1,9 +1,9 @@
 <div class="accordion-container">
   <div class="header">
-    <h4 *ngIf="selectedClient">Selected client: {{selectedClient.name}}</h4>
+    <h4 *ngIf="selectedClient">Selected client: {{selectedClient.name}} id {{selectedClient.clientId}}</h4>
   </div>
   <div class="header">
-    <h4 *ngIf="selectedAccount">Selected account: {{selectedAccount.currency}} {{selectedAccount.amount}}</h4>
+    <h4 *ngIf="selectedAccount">Selected account: {{selectedAccount.currency}} {{selectedAccount.amount}} id {{selectedAccount.accountId}}</h4>
   </div>
   <mat-accordion>
     <mat-expansion-panel>
@@ -55,6 +55,27 @@
       <form (ngSubmit)="addAccount(form)" #form="ngForm">
         <input type="text" name="currency" ngModel required placeholder="Currency">
         <button mat-button color="primary" type="submit">Add Account</button>
+      </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel *ngIf="this.selectedAccount">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Transaction history
+        </mat-panel-title>
+        <mat-panel-description>
+          {{selectedAccount.currency}} {{selectedAccount.amount}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form #form="ngForm" style="display: flex; justify-content: center; gap: 15px;">
+          <mat-form-field appearance="outline">
+            <mat-label>Offset</mat-label>
+            <input matInput type="number" [(ngModel)]="offset" ngModel name="offset" min="0">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Limit</mat-label>
+            <input matInput type="number" [(ngModel)]="limit" ngModel name="limit" min="0">
+          </mat-form-field>
+          <button mat-button color="primary" type="submit" (click)="getHistory()">Get Transactions</button>
       </form>
     </mat-expansion-panel>
     <mat-expansion-panel *ngIf="this.selectedAccount">

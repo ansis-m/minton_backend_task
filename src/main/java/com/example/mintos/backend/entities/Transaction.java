@@ -1,6 +1,5 @@
 package com.example.mintos.backend.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,16 +20,17 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "account_from")
-    @JsonBackReference
     private Account accountFrom;
 
     @ManyToOne
     @JoinColumn(name = "account_to")
-    @JsonBackReference
     private Account accountTo;
 
     @Column(nullable = false)
-    private Double amount;
+    private Double amountFrom;
+
+    @Column(nullable = false)
+    private Double amountTo;
 
     @Column
     private Double conversionRate;
