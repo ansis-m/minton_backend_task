@@ -35,19 +35,19 @@ services:
     networks:
       - app-network
 
-#  frontend:
-#    image: ansism/mintosfrontend:latest
-#    depends_on:
-#      - app
-#    deploy:
-#      restart_policy:
-#        condition: on-failure
-#        delay: 5s
-#        max_attempts: 5
-#    ports:
-#      - "4200:80"
-#    networks:
-#      - app-network
+  frontend:
+    image: ansism/frontend:latest
+    depends_on:
+      - app
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+    ports:
+      - "4200:80"
+    networks:
+      - app-network
 
 networks:
   app-network:

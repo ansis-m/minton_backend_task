@@ -18,9 +18,6 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientId;
 
-    @Column(unique = true, nullable = false)
-    private String identifier;
-
     @Column(nullable = false)
     private String name;
 
