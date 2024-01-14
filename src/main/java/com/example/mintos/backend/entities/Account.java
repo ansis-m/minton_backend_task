@@ -1,11 +1,11 @@
 package com.example.mintos.backend.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,6 +21,7 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
+    @JsonBackReference
     private Client client;
 
     @Column(nullable = false)
@@ -31,22 +32,11 @@ public class Account {
 
     @OneToMany(mappedBy = "accountFrom")
     @ToString.Exclude
+    @JsonManagedReference
     private Set<Transaction> transactionsFrom;
 
     @OneToMany(mappedBy = "accountTo")
     @ToString.Exclude
+    @JsonManagedReference
     private Set<Transaction> transactionsTo;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Account account = (Account) o;
-        return getAccountId() != null && Objects.equals(getAccountId(), account.getAccountId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

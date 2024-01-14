@@ -2,6 +2,9 @@
   <div class="header">
     <h4 *ngIf="selectedClient">Selected client: {{selectedClient.name}}</h4>
   </div>
+  <div class="header">
+    <h4 *ngIf="selectedAccount">Selected account: {{selectedAccount.currency}} {{selectedAccount.amount}}</h4>
+  </div>
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -27,26 +30,32 @@
       </mat-expansion-panel-header>
       <mat-form-field>
         <mat-label>Select</mat-label>
-        <mat-select [(ngModel)]="selectedClient">
-            <mat-option *ngFor="let client of clients" [value]="client">{{client.name}}</mat-option>
+        <mat-select [(ngModel)]="selectedClient" (ngModelChange)="onClientChange($event)">
+            <mat-option *ngFor="let client of clients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
         </mat-select>
       </mat-form-field>
     </mat-expansion-panel>
-    <mat-expansion-panel (opened)="getAccounts()">
+    <mat-expansion-panel *ngIf="this.selectedClient" (opened)="getAccounts()">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Clients
+          Accounts
         </mat-panel-title>
         <mat-panel-description>
-          Select a client
+          accounts of {{selectedClient.name}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
-        <mat-label>Select</mat-label>
-        <mat-select [(ngModel)]="selectedClient">
-          <mat-option *ngFor="let client of clients" [value]="client">{{client.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div *ngIf="accounts && accounts.length">
+        <mat-form-field>
+          <mat-label>Select</mat-label>
+            <mat-select [(ngModel)]="selectedAccount">
+              <mat-option *ngFor="let account of accounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+      </div>
+      <form (ngSubmit)="addAccount(form)" #form="ngForm">
+        <input type="text" name="currency" ngModel required placeholder="Currency">
+        <button mat-button color="primary" type="submit">Add Account</button>
+      </form>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
