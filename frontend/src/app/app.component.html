@@ -49,7 +49,7 @@
       <div *ngIf="accounts && accounts.length">
         <mat-form-field>
           <mat-label>Select</mat-label>
-            <mat-select [(ngModel)]="selectedAccount">
+            <mat-select [(ngModel)]="selectedClient.selectedAccount">
               <mat-option *ngFor="let account of accounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -147,14 +147,14 @@
       <div *ngIf="targetClients.length; else noClientsBlock">
         <mat-form-field >
           <mat-label>Select recipient</mat-label>
-          <mat-select [(ngModel)]="targetClient" (ngModelChange)="onTargetClientChange($event)">
+          <mat-select [(ngModel)]="targetClient" (ngModelChange)="onClientChange($event)">
             <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <div *ngIf="selectedClient">
-          <mat-form-field *ngIf="targetAccounts.length; else noAccountBlock">
+        <div *ngIf="selectedClient && targetClient">
+          <mat-form-field *ngIf="targetAccounts?.length; else noAccountBlock">
             <mat-label>Select recipient account</mat-label>
-            <mat-select [(ngModel)]="targetAccount">
+            <mat-select [(ngModel)]="targetClient.selectedAccount">
               <mat-option *ngFor="let account of targetAccounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
             </mat-select>
           </mat-form-field>

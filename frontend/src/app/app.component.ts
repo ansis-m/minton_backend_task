@@ -3,7 +3,6 @@ import {ClientService} from "./services/client.service";
 import {NgForm} from "@angular/forms";
 import {Client} from "./models/client";
 import {AccountService} from "./services/account.service";
-import {Account} from "./models/account";
 import {Transaction} from "./models/transaction";
 import {Transfer} from "./models/transfer";
 
@@ -14,19 +13,13 @@ import {Transfer} from "./models/transfer";
 })
 export class AppComponent {
   selectedClient: Client | undefined;
-  accounts: Account[] = [];
-  selectedAccount: Account | undefined;
   transactions: Transaction[] = [];
 
   columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'amount for the target account', 'conversion rate', 'date'];
 
-
-
   offset: number = 0;
   limit: number = 10;
   targetClient: Client | undefined;
-  targetAccounts: Account[] = [];
-  targetAccount: Account | undefined;
 
   constructor(private clientService: ClientService,
               private accountService: AccountService) {}
@@ -38,7 +31,6 @@ export class AppComponent {
         form.resetForm();
       },
       error: (error) => {
-
       }
     });
   }
@@ -47,15 +39,19 @@ export class AppComponent {
     return this.clients.filter(client => client.clientId !== this.selectedClient?.clientId);
   }
 
+  get targetAccounts() {
+    return this.targetClient?.accounts;
+  }
+
   getClients() {
     this.clientService.getClients();
   }
 
   get clients(): Client[]{
     let list = this.clientService.getClientList();
-    list.forEach(client => {
+    list.forEach((client, index) => {
       if (client.clientId === this.selectedClient?.clientId) {
-        this.selectedClient = client;
+         list[index] = this.selectedClient;
       }
     })
     return list;
@@ -66,21 +62,24 @@ export class AppComponent {
   }
 
   onClientChange(client: Client) {
-    this.selectedAccount = undefined;
     this.fetchAccounts(client);
   }
 
-  fetchAccounts(client: Client | undefined){
-    if(!client) {
+  fetchAccounts(client: Client | undefined) {
+    if (!client) {
       return;
     }
-    this.accountService.fetchAccounts(client).subscribe(response => {
-      this.accounts = response._embedded.account
-      this.accounts.forEach(account => {
-        if (account?.accountId === this.selectedAccount?.accountId) {
-          this.selectedAccount = account;
-        }
-      })
+    this.accountService.fetchAccounts(client).subscribe({
+      next: (response) => {
+        client.accounts = response._embedded.account
+        client.accounts.forEach(account => {
+          if (account?.accountId === client.selectedAccount?.accountId) {
+            client.selectedAccount = account;
+          }
+        })
+      },
+      error: (error) => {
+      }
     });
   }
 
@@ -101,7 +100,7 @@ export class AppComponent {
   addToAccount(form: NgForm, withdraw: boolean = false) {
     let amount = form.value.amount * (withdraw? -1 : 1);
 
-    if (!this.selectedAccount || this.selectedAccount?.amount + amount < 0) {
+    if (!this.selectedAccount || this.selectedAccount.amount + amount < 0) {
       return;
     }
     this.accountService.addFunds(this.selectedAccount, amount).subscribe({
@@ -112,8 +111,14 @@ export class AppComponent {
 
       }
     });
+  }
 
+  get   accounts(){
+    return this.selectedClient?.accounts;
+  }
 
+  get selectedAccount() {
+    return this.selectedClient?.selectedAccount;
   }
 
   getHistory() {
@@ -155,19 +160,8 @@ export class AppComponent {
 
   }
 
-  onTargetClientChange(client: Client) {
-    if(!client) {
-      return;
-    }
-    this.accountService.fetchAccounts(client).subscribe(response => {
-      this.targetAccounts = response._embedded.account
-      this.targetAccounts.forEach(account => {
-        if (account?.accountId === this.targetAccount?.accountId) {
-          this.targetAccount = account;
-        }
-      })
-    });
-
+  get targetAccount(){
+    return this.targetClient?.selectedAccount;
   }
 
   transfer(form: NgForm) {
@@ -178,7 +172,9 @@ export class AppComponent {
 
     this.accountService.transfer(transfer).subscribe({
       next: (result: any) => {
-        console.log(result)
+        console.log(result);
+        this.fetchAccounts(this.selectedClient);
+        this.fetchAccounts(this.targetClient);
       },
       error: (error: any) => {
         console.log(error);
