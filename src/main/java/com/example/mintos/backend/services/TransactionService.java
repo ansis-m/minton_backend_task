@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class TransactionService {
@@ -19,21 +18,6 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
         
     }
-    public Transaction createTransaction(Transaction transaction) {
-        return transactionRepository.save(transaction);
-    }
-
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
-    }
-
-    public Transaction getTransactionById(Long id) {
-        return transactionRepository.findById(id).orElse(null);
-    }
-
-    public void deleteTransaction(Long id) {
-        transactionRepository.deleteById(id);
-    }
 
     public void createTransaction(Account account, Double amount) {
         Transaction transaction = new Transaction();
@@ -44,8 +28,17 @@ public class TransactionService {
             transaction.setAccountFrom(account);
             transaction.setAmountFrom(amount);
         }
-        transaction.setCreatedAt(LocalDateTime.now());
         transaction.setConversionRate(1.00);
         transactionRepository.save(transaction);
+    }
+
+    public Transaction createTransaction(Account target, Account source, Double amount, Double targetAmount, Double exchangeRate) {
+        Transaction transaction = new Transaction();
+        transaction.setAccountFrom(source);
+        transaction.setAccountTo(target);
+        transaction.setConversionRate(exchangeRate);
+        transaction.setAmountFrom(amount * -1);
+        transaction.setAmountTo(targetAmount);
+        return transactionRepository.save(transaction);
     }
 }

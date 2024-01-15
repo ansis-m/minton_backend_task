@@ -33,7 +33,7 @@ export class AccountService {
       .set('clientId', selectedClient.clientId)
       .set('currency', currency);
 
-    return this.http.post(this.apiUrl + '/add', null, { params });
+    return this.http.post(this.apiUrl + '/create/account', null, { params });
   }
 
   addFunds(selectedAccount: Account, amount: number): Observable<any> {
@@ -41,7 +41,7 @@ export class AccountService {
       .set('accountId', selectedAccount.accountId)
       .set('amount', amount);
 
-    return this.http.post(this.apiUrl + '/addfunds', null, { params });
+    return this.http.post(this.apiUrl + '/add/funds', null, { params });
   }
 
   getTransactions(limit: number, offset: number, selectedAccount: Account | undefined): Observable<any> {

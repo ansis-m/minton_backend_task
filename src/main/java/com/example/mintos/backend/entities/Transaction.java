@@ -42,5 +42,4 @@ public class Transaction {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
 }

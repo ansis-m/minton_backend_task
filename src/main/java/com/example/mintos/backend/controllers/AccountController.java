@@ -2,14 +2,12 @@ package com.example.mintos.backend.controllers;
 
 import com.example.mintos.backend.entities.Account;
 import com.example.mintos.backend.entities.Transaction;
+import com.example.mintos.backend.models.Transfer;
 import com.example.mintos.backend.services.AccountService;
 import com.example.mintos.backend.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,14 +25,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/create/account")
     public ResponseEntity<Account> createAccount(@RequestParam Long clientId, @RequestParam String currency) {
         Account savedAccount = clientService.createAccount(clientId, currency);
         return ResponseEntity.ok(savedAccount);
     }
 
 
-    @PostMapping("/addfunds")
+    @PostMapping("/add/funds")
     public ResponseEntity<Account> addFunds(@RequestParam Long accountId, @RequestParam Double amount) {
         Account account = accountService.addFunds(accountId, amount);
         return ResponseEntity.ok(account);
@@ -44,5 +42,11 @@ public class AccountController {
     public ResponseEntity<List<Transaction>> getTransactions(@RequestParam Long accountId, @RequestParam Integer limit, @RequestParam Integer offset) {
         List<Transaction> transactions = accountService.getTransactions(accountId, limit, offset);
         return ResponseEntity.ok(transactions);
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<Transaction> transfer(@RequestBody Transfer transfer) {
+        Transaction transaction = accountService.transfer(transfer);
+        return ResponseEntity.ok(transaction);
     }
 }
