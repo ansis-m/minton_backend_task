@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Client} from "../models/client";
 import {Observable} from "rxjs";
 import {Account} from "../models/account";
+import {Transfer} from "../models/transfer";
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -51,5 +52,9 @@ export class AccountService {
       .set('offset', offset)
 
     return this.http.post(this.apiUrl + '/transactions', null, { params });
+  }
+
+  transfer(transfer: Transfer) {
+    return this.http.post(this.apiUrl + '/transfer', transfer);
   }
 }

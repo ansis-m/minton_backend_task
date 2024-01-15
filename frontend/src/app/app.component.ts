@@ -5,6 +5,7 @@ import {Client} from "./models/client";
 import {AccountService} from "./services/account.service";
 import {Account} from "./models/account";
 import {Transaction} from "./models/transaction";
+import {Transfer} from "./models/transfer";
 
 @Component({
   selector: 'app-root',
@@ -17,12 +18,15 @@ export class AppComponent {
   selectedAccount: Account | undefined;
   transactions: Transaction[] = [];
 
-  columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'date'];
+  columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'amount for the target account', 'conversion rate', 'date'];
 
 
 
   offset: number = 0;
-  limit: number = 0;
+  limit: number = 10;
+  targetClient: Client | undefined;
+  targetAccounts: Account[] = [];
+  targetAccount: Account | undefined;
 
   constructor(private clientService: ClientService,
               private accountService: AccountService) {}
@@ -37,6 +41,10 @@ export class AppComponent {
 
       }
     });
+  }
+
+  get targetClients() {
+    return this.clients.filter(client => client.clientId !== this.selectedClient?.clientId);
   }
 
   getClients() {
@@ -123,17 +131,59 @@ export class AppComponent {
   }
 
   getAmount(element: Transaction) {
-    return 69420;
 
+    if (element?.accountTo?.accountId === this.selectedAccount?.accountId) {
+      return element.amountTo;
+    }
+    return element.amountFrom;
   }
 
   getType(element: Transaction) {
-    return 'transaction';
+    if (element.amountFrom == null || element.accountTo == null) {
+      if (this.selectedAccount?.accountId == element.accountTo?.accountId){
+        return "addition of funds";
+      }
+      return "withdrawal";
+    }
+
+    return 'transfer';
 
   }
 
   getTargetAccount(element: Transaction) {
-    return 'target';
+    return element.accountTo?.accountId;
+
+  }
+
+  onTargetClientChange(client: Client) {
+    if(!client) {
+      return;
+    }
+    this.accountService.fetchAccounts(client).subscribe(response => {
+      this.targetAccounts = response._embedded.account
+      this.targetAccounts.forEach(account => {
+        if (account?.accountId === this.targetAccount?.accountId) {
+          this.targetAccount = account;
+        }
+      })
+    });
+
+  }
+
+  transfer(form: NgForm) {
+    if (!form.value.amount || !this.selectedAccount?.accountId || !this.targetAccount?.accountId) {
+      return;
+    }
+    let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount)
+
+    this.accountService.transfer(transfer).subscribe({
+      next: (result: any) => {
+        console.log(result)
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    })
 
   }
 }

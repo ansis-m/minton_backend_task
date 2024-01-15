@@ -44,7 +44,6 @@
           Accounts
         </mat-panel-title>
         <mat-panel-description>
-          accounts of {{selectedClient.name}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngIf="accounts && accounts.length">
@@ -83,23 +82,33 @@
       <table *ngIf="transactions.length" mat-table [dataSource]="transactions" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> Id </th>
+          <th mat-header-cell *matHeaderCellDef> Transaction Id </th>
           <td mat-cell *matCellDef="let element"> {{element.transactionId}} </td>
         </ng-container>
 
         <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef> amount </th>
+          <th mat-header-cell *matHeaderCellDef> Amount for this account </th>
           <td mat-cell *matCellDef="let element"> {{getAmount(element)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="transaction type">
-          <th mat-header-cell *matHeaderCellDef> type </th>
+          <th mat-header-cell *matHeaderCellDef> Type </th>
           <td mat-cell *matCellDef="let element"> {{getType(element)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="id of the target account">
-          <th mat-header-cell *matHeaderCellDef> Id of the target account </th>
+          <th mat-header-cell *matHeaderCellDef> Id of the other account </th>
           <td mat-cell *matCellDef="let element"> {{getTargetAccount(element)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount for the target account">
+          <th mat-header-cell *matHeaderCellDef> Amount for the other account </th>
+          <td mat-cell *matCellDef="let element"> {{getTargetAccount(element)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="conversion rate">
+          <th mat-header-cell *matHeaderCellDef> Conversion rate </th>
+          <td mat-cell *matCellDef="let element"> {{element.conversionRate}} </td>
         </ng-container>
 
         <ng-container matColumnDef="date">
@@ -126,5 +135,46 @@
         <button mat-button color="primary" type="submit" (click)="addToAccount(form, true)">Withdraw</button>
       </form>
     </mat-expansion-panel>
+
+    <mat-expansion-panel *ngIf="this.selectedAccount">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Transfer funds
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngIf="targetClients.length; else noClientsBlock">
+        <mat-form-field >
+          <mat-label>Select recipient</mat-label>
+          <mat-select [(ngModel)]="targetClient" (ngModelChange)="onTargetClientChange($event)">
+            <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div *ngIf="selectedClient">
+          <mat-form-field *ngIf="targetAccounts.length; else noAccountBlock">
+            <mat-label>Select recipient account</mat-label>
+            <mat-select [(ngModel)]="targetAccount">
+              <mat-option *ngFor="let account of targetAccounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="targetAccount">
+            <form #form="ngForm">
+              <input type="number" name="amount" ngModel required placeholder="0.00">
+              <button mat-button color="primary" type="submit" (click)="transfer(form)">Transfer</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
   </mat-accordion>
 </div>
+
+
+<ng-template #noClientsBlock>
+  <h3>Register another client to continue</h3>
+</ng-template>
+
+<ng-template #noAccountBlock>
+  <h3>Recipient client does not have an account</h3>
+</ng-template>

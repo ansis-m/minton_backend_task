@@ -6,9 +6,9 @@ export class Transaction{
     public transactionId: number,
     public accountFrom: Account | null,
     public accountTo: Account | null,
-    public ammountFrom: number | null,
-    public ammountTo: number | null,
-    public conversionrate: number,
+    public amountFrom: number | null,
+    public amountTo: number | null,
+    public conversionRate: number,
     public createdAt: string
   ) {}
 
