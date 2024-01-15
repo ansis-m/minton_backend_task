@@ -5,9 +5,6 @@ import com.example.mintos.backend.entities.Transaction;
 import com.example.mintos.backend.repositories.AccountRepository;
 import com.example.mintos.backend.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,12 +47,8 @@ public class AccountService {
         return account;
     }
 
-    public Page<Transaction> getTransactions(Long accountId, Integer limit, Integer offset) {
-        PageRequest pageRequest = (limit == 0)
-                ? PageRequest.of(offset, Integer.MAX_VALUE, Sort.by("createdAt").descending())
-                : PageRequest.of(offset, limit, Sort.by("createdAt").descending());
-
-        return  transactionRepository.findByAccountFromAccountIdOrAccountToAccountId(accountId, accountId, pageRequest);
+    public List<Transaction> getTransactions(Long accountId, Integer limit, Integer offset) {
+        return  transactionRepository.findTransactionsWithOffsetAndLimit(accountId, limit, offset);
 
     }
 }

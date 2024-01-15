@@ -10,22 +10,24 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
     AppComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    MatExpansionModule,
-    MatButtonModule,
-    BrowserAnimationsModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        MatExpansionModule,
+        MatButtonModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatTableModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

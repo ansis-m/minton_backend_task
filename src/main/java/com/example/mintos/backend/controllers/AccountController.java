@@ -5,7 +5,6 @@ import com.example.mintos.backend.entities.Transaction;
 import com.example.mintos.backend.services.AccountService;
 import com.example.mintos.backend.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,8 +41,8 @@ public class AccountController {
     }
 
     @PostMapping("/transactions")
-    public ResponseEntity<Page<Transaction>> getTransactions(@RequestParam Long accountId, @RequestParam Integer limit, @RequestParam Integer offset) {
-        Page<Transaction> transactions = accountService.getTransactions(accountId, limit, offset);
+    public ResponseEntity<List<Transaction>> getTransactions(@RequestParam Long accountId, @RequestParam Integer limit, @RequestParam Integer offset) {
+        List<Transaction> transactions = accountService.getTransactions(accountId, limit, offset);
         return ResponseEntity.ok(transactions);
     }
 }

@@ -28,12 +28,15 @@
           Select a client
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+      <mat-form-field *ngIf="clients.length; else noClientsBlock">
         <mat-label>Select</mat-label>
         <mat-select [(ngModel)]="selectedClient" (ngModelChange)="onClientChange($event)">
             <mat-option *ngFor="let client of clients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
         </mat-select>
       </mat-form-field>
+      <ng-template #noClientsBlock>
+        <h3>Register at least one client to continue</h3>
+      </ng-template>
     </mat-expansion-panel>
     <mat-expansion-panel *ngIf="this.selectedClient" (opened)="getAccounts()">
       <mat-expansion-panel-header>
@@ -77,6 +80,36 @@
           </mat-form-field>
           <button mat-button color="primary" type="submit" (click)="getHistory()">Get Transactions</button>
       </form>
+      <table *ngIf="transactions.length" mat-table [dataSource]="transactions" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.transactionId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> amount </th>
+          <td mat-cell *matCellDef="let element"> {{getAmount(element)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="transaction type">
+          <th mat-header-cell *matHeaderCellDef> type </th>
+          <td mat-cell *matCellDef="let element"> {{getType(element)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="id of the target account">
+          <th mat-header-cell *matHeaderCellDef> Id of the target account </th>
+          <td mat-cell *matCellDef="let element"> {{getTargetAccount(element)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Timestamp </th>
+          <td mat-cell *matCellDef="let element"> {{element.createdAt}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+      </table>
     </mat-expansion-panel>
     <mat-expansion-panel *ngIf="this.selectedAccount">
       <mat-expansion-panel-header>

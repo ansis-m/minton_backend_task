@@ -4,6 +4,7 @@ import {NgForm} from "@angular/forms";
 import {Client} from "./models/client";
 import {AccountService} from "./services/account.service";
 import {Account} from "./models/account";
+import {Transaction} from "./models/transaction";
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,11 @@ export class AppComponent {
   selectedClient: Client | undefined;
   accounts: Account[] = [];
   selectedAccount: Account | undefined;
+  transactions: Transaction[] = [];
+
+  columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'date'];
+
+
 
   offset: number = 0;
   limit: number = 0;
@@ -23,7 +29,13 @@ export class AppComponent {
 
   onRegister(form: NgForm) {
     if (form.invalid) return;
-    this.clientService.addClient(form.value).subscribe(response => {
+    this.clientService.addClient(form.value).subscribe({
+      next: (response) => {
+        form.resetForm();
+      },
+      error: (error) => {
+
+      }
     });
   }
 
@@ -101,12 +113,27 @@ export class AppComponent {
 
     this.accountService.getTransactions(this.limit, this.offset, this.selectedAccount).subscribe({
       next: (response) => {
-        console.log(response);
+        this.transactions = response;
       },
       error: (error) => {
 
       }
     });
+
+  }
+
+  getAmount(element: Transaction) {
+    return 69420;
+
+  }
+
+  getType(element: Transaction) {
+    return 'transaction';
+
+  }
+
+  getTargetAccount(element: Transaction) {
+    return 'target';
 
   }
 }
