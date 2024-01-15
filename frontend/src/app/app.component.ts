@@ -62,6 +62,7 @@ export class AppComponent {
   }
 
   onClientChange(client: Client) {
+    this.transactions = [];
     this.fetchAccounts(client);
   }
 
@@ -69,7 +70,7 @@ export class AppComponent {
     if (!client) {
       return;
     }
-    this.accountService.fetchAccounts(client).subscribe({
+    return this.accountService.fetchAccounts(client).subscribe({
       next: (response) => {
         client.accounts = response._embedded.account
         client.accounts.forEach(account => {

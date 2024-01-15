@@ -58,7 +58,7 @@ public class AccountService {
         target.setAmount(targetAmount);
         accountRepository.save(source);
         accountRepository.save(target);
-        return transactionService.createTransaction(target, source, transfer.getAmount(), targetAmount, exchangeRate);
+        return transactionService.createTransaction(target, source, transfer.getAmount(), transfer.getAmount() * exchangeRate, exchangeRate);
     }
 
     private void checkBalance(Account source, Transfer transfer) {
