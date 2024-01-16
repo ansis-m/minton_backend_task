@@ -1,5 +1,6 @@
 package com.example.mintos.backend.services;
 
+import com.example.mintos.backend.enums.Currency;
 import com.example.mintos.backend.models.Rates;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-//https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_A3k7IjJEm4g5IOLaqB2e9VWIBVM5HRAhv1J2hxP0&currencies=EUR%2CUSD%2CCAD&base_currency=CAD
 
 @Service
 public class CurrencyExchangeService {
@@ -27,11 +26,26 @@ public class CurrencyExchangeService {
             return 1.00000;
         }
         try {
-            return getCurrencyExchangeRates(sourceCurrency, targetCurrency).getBody().getData().get(targetCurrency);
+            ResponseEntity<Rates> rates = getCurrencyExchangeRates(sourceCurrency, targetCurrency);
+            if (!rates.getStatusCode().is2xxSuccessful()){
+                throw new RuntimeException("Exchange api failed");
+            }
+            return rates.getBody().getData().get(targetCurrency);
         } catch (Exception e) {
-            return 1.0;
+            e.printStackTrace();
+            return getDefaultRate(sourceCurrency, targetCurrency);
         }
 
+    }
+
+    private Double getDefaultRate(String sourceCurrency, String targetCurrency) {
+        try{
+            double baseCurrencyToUSD = Currency.getCurrency(sourceCurrency).getExchangeRateToUSD();
+            double targetCurrencyToUSD = Currency.getCurrency(targetCurrency).getExchangeRateToUSD();
+            return baseCurrencyToUSD / targetCurrencyToUSD;
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Transfer failed because currency is not supported");
+        }
     }
 
     public ResponseEntity<Rates> getCurrencyExchangeRates(String base, String target) {
