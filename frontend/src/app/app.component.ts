@@ -152,13 +152,23 @@ export class AppComponent {
       return "withdrawal";
     }
 
-    return 'transfer';
+    if (this.selectedClient?.selectedAccount?.accountId === element.accountFrom?.accountId) {
+      return 'outgoing transfer';
+    }
 
+    return 'incoming transfer';
   }
 
-  getTargetAccount(element: Transaction) {
-    return element.accountTo?.accountId;
-
+  getOtherAccount(element: Transaction) {
+    switch (this.getType(element)) {
+      case "addition of funds":
+      case "withdrawal":
+        return 'N/A';
+      case "incoming transfer":
+        return element.accountFrom?.accountId;
+      default:
+        return element.accountTo?.accountId;
+    }
   }
 
   get targetAccount(){
@@ -182,5 +192,16 @@ export class AppComponent {
       }
     })
 
+  }
+
+  getTargetAmount(element: Transaction) {
+
+    if(!this.getType(element).includes("transfer")){
+      return 'N/A';
+    }
+    if (element?.accountTo?.accountId === this.selectedAccount?.accountId) {
+      return element.amountFrom;
+    }
+    return element.amountTo;
   }
 }

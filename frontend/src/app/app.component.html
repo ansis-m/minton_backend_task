@@ -35,7 +35,7 @@
         </mat-select>
       </mat-form-field>
       <ng-template #noClientsBlock>
-        <h3>Register at least one client to continue</h3>
+        <h3>Register at least one more client to continue</h3>
       </ng-template>
     </mat-expansion-panel>
     <mat-expansion-panel *ngIf="this.selectedClient" (opened)="getAccounts()">
@@ -65,7 +65,7 @@
           Transaction history
         </mat-panel-title>
         <mat-panel-description>
-          {{selectedAccount.currency}} {{selectedAccount.accountId}}
+          {{selectedAccount.currency}} account id: {{selectedAccount.accountId}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <form #form="ngForm" style="display: flex; justify-content: center; gap: 15px;">
@@ -98,12 +98,12 @@
 
         <ng-container matColumnDef="id of the target account">
           <th mat-header-cell *matHeaderCellDef> Id of the other account </th>
-          <td mat-cell *matCellDef="let element"> {{getTargetAccount(element)}} </td>
+          <td mat-cell *matCellDef="let element"> {{getOtherAccount(element)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="amount for the target account">
           <th mat-header-cell *matHeaderCellDef> Amount for the other account </th>
-          <td mat-cell *matCellDef="let element"> {{getTargetAccount(element)}} </td>
+          <td mat-cell *matCellDef="let element"> {{getTargetAmount(element)}} </td>
         </ng-container>
 
         <ng-container matColumnDef="conversion rate">
