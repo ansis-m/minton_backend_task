@@ -52,6 +52,8 @@ public class AccountService {
         Account source = accountRepository.findById(transfer.getSourceId()).orElseThrow(() -> new RuntimeException("Target account not found"));
         checkBalance(source, transfer);
         Double exchangeRate = exchangeService.getRate(target.getCurrency(), source.getCurrency());
+        System.out.println("\n\nExchange rate: " + exchangeRate);
+
         Double targetAmount = target.getAmount() + transfer.getAmount() * exchangeRate;
 
         source.setAmount(source.getAmount() - transfer.getAmount());
