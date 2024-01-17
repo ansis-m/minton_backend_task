@@ -7,6 +7,7 @@ CREATE TABLE transaction (
                              account_to INT REFERENCES account(account_id),
                              amount_from DECIMAL(15,2),
                              amount_to DECIMAL(15,2),
+                             currency VARCHAR(3) NOT NULL,
                              conversion_rate DECIMAL(10,4),
                              created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
                              CONSTRAINT pk_transaction PRIMARY KEY (transaction_id) USING INDEX TABLESPACE pg_default

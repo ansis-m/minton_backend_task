@@ -9,7 +9,8 @@ export class Transaction{
     public amountFrom: number | null,
     public amountTo: number | null,
     public conversionRate: number,
-    public createdAt: string
+    public createdAt: string,
+    public currency: string
   ) {}
 
 }

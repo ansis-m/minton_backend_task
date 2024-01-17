@@ -36,10 +36,11 @@ export class AccountService {
     return this.http.post(this.apiUrl + '/create/account', null, { params });
   }
 
-  addFunds(selectedAccount: Account, amount: number): Observable<any> {
+  addFunds(selectedAccount: Account, amount: number, currency: string): Observable<any> {
     const params = new HttpParams()
       .set('accountId', selectedAccount.accountId)
-      .set('amount', amount);
+      .set('amount', amount)
+      .set('currency', currency);
 
     return this.http.post(this.apiUrl + '/add/funds', null, { params });
   }

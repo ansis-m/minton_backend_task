@@ -33,8 +33,8 @@ public class AccountController {
 
 
     @PostMapping("/add/funds")
-    public ResponseEntity<Account> addFunds(@RequestParam Long accountId, @RequestParam Double amount) {
-        Account account = accountService.addFunds(accountId, amount);
+    public ResponseEntity<Account> addFunds(@RequestParam Long accountId, @RequestParam Double amount, @RequestParam String currency) {
+        Account account = accountService.addFunds(accountId, amount, currency);
         return ResponseEntity.ok(account);
     }
 

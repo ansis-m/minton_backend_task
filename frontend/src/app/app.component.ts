@@ -20,7 +20,7 @@ export class AppComponent implements OnInit{
     selectedCurrency: new FormControl('')
   });
 
-  columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'amount for the target account', 'conversion rate', 'date'];
+  columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'amount for the target account', 'conversion rate', 'currency', 'date'];
 
   offset: number = 0;
   limit: number = 10;
@@ -102,10 +102,6 @@ export class AppComponent implements OnInit{
   }
 
   addAccount(form: any) {
-
-
-    console.log("form value: " + JSON.stringify(form));
-
     if(!this.selectedClient) {
       return;
     }
@@ -121,21 +117,20 @@ export class AppComponent implements OnInit{
 
   addToAccount(form: NgForm, withdraw: boolean = false) {
     let amount = form.value.amount * (withdraw? -1 : 1);
-
     if (!this.selectedAccount || this.selectedAccount.amount + amount < 0) {
       return;
     }
-    this.accountService.addFunds(this.selectedAccount, amount).subscribe({
+    this.accountService.addFunds(this.selectedAccount, amount, form.value.selectedCurrency).subscribe({
       next: (response) => {
         this.fetchAccounts(this.selectedClient);
       },
       error: (error) => {
-
+        console.error(error);
       }
     });
   }
 
-  get   accounts(){
+  get accounts(){
     return this.selectedClient?.accounts;
   }
 
@@ -144,14 +139,12 @@ export class AppComponent implements OnInit{
   }
 
   getHistory() {
-    console.log(this.limit + "  " + this.offset);
-
     this.accountService.getTransactions(this.limit, this.offset, this.selectedAccount).subscribe({
       next: (response) => {
         this.transactions = response;
       },
       error: (error) => {
-
+        console.error(error);
       }
     });
 
@@ -198,14 +191,10 @@ export class AppComponent implements OnInit{
 
   transfer(form: NgForm) {
 
-    console.log("transfer currency: " + this.transferCurrency);
-
-
     if (!form.value.amount || !this.selectedAccount?.accountId || !this.targetAccount?.accountId || !this.transferCurrency) {
       return;
     }
     let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount, this.transferCurrency)
-
     this.accountService.transfer(transfer).subscribe({
       next: (result: any) => {
         console.log(result);
@@ -213,7 +202,7 @@ export class AppComponent implements OnInit{
         this.fetchAccounts(this.targetClient);
       },
       error: (error: any) => {
-        console.log(error);
+        console.error(error);
       }
     })
 
@@ -243,7 +232,7 @@ export class AppComponent implements OnInit{
         }
       },
       error: (error: any) => {
-        console.log(error);
+        console.error(error);
       }
     });
   }

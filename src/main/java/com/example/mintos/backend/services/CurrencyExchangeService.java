@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 @Service
 public class CurrencyExchangeService {
@@ -52,7 +50,7 @@ public class CurrencyExchangeService {
         }
     }
 
-    public ResponseEntity<Rates> getCurrencyExchangeRates(String base, String target) {
+    private ResponseEntity<Rates> getCurrencyExchangeRates(String base, String target) {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(API_URL)
                 .queryParam("apikey", API_KEY)

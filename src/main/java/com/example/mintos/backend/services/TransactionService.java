@@ -15,19 +15,19 @@ public class TransactionService {
     @Autowired
     TransactionService(TransactionRepository transactionRepository){
         this.transactionRepository = transactionRepository;
-        
     }
 
-    public void createTransaction(Account account, Double amount) {
+    public void createTransaction(Account account, Double amount, String currency, Double rate) {
         Transaction transaction = new Transaction();
         if (amount > 0) {
             transaction.setAccountTo(account);
-            transaction.setAmountTo(amount);
+            transaction.setAmountTo(amount * rate);
         } else {
             transaction.setAccountFrom(account);
-            transaction.setAmountFrom(amount);
+            transaction.setAmountFrom(amount * rate);
         }
-        transaction.setConversionRate(1.00);
+        transaction.setConversionRate(rate);
+        transaction.setCurrency(currency);
         transactionRepository.save(transaction);
     }
 
@@ -38,6 +38,7 @@ public class TransactionService {
         transaction.setConversionRate(exchangeRate);
         transaction.setAmountFrom(transfer.getAmount() * exchangeRate);
         transaction.setAmountTo(transfer.getAmount());
+        transaction.setCurrency(transfer.getCurrency());
         return transactionRepository.save(transaction);
     }
 }

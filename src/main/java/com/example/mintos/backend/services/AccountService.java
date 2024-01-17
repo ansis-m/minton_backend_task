@@ -34,11 +34,13 @@ public class AccountService {
     }
 
     @Transactional
-    public Account addFunds(Long accountId, Double amount) {
+    public Account addFunds(Long accountId, Double amount, String currency) {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException(String.format("Account with id %d not found!", accountId)));
-        account.setAmount(account.getAmount() + amount);
+        Double rate = exchangeService.getRate(currency, account.getCurrency());
+
+        account.setAmount(account.getAmount() + amount * rate);
         account = accountRepository.save(account);
-        transactionService.createTransaction(account, amount);
+        transactionService.createTransaction(account, Math.abs(amount), currency, rate);
         return account;
     }
 

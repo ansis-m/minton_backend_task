@@ -8,8 +8,7 @@ export class CurrencyService {
 
   constructor(private http: HttpClient) {}
 
-  fetchCurrencies(): Observable<Map<string, string>> {
-    // @ts-ignore
+  fetchCurrencies(): Observable<Object> {
     return this.http.get(this.apiUrl);
   }
 }
