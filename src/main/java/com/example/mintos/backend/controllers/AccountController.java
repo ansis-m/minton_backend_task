@@ -16,8 +16,8 @@ import java.util.List;
 public class AccountController {
 
 
-    private ClientService clientService;
-    private AccountService accountService;
+    private final ClientService clientService;
+    private final AccountService accountService;
 
     @Autowired
     AccountController(ClientService clientService, AccountService accountService){

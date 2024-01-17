@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ClientService} from "./services/client.service";
 import {NgForm} from "@angular/forms";
 import {Client} from "./models/client";
 import {AccountService} from "./services/account.service";
 import {Transaction} from "./models/transaction";
 import {Transfer} from "./models/transfer";
+import {CurrencyService} from "./services/currency.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   selectedClient: Client | undefined;
   transactions: Transaction[] = [];
 
@@ -21,8 +22,17 @@ export class AppComponent {
   limit: number = 10;
   targetClient: Client | undefined;
 
+  currencies: Map<string, string> = new Map();
+
   constructor(private clientService: ClientService,
-              private accountService: AccountService) {}
+              private accountService: AccountService,
+              private currencyService: CurrencyService) {}
+
+
+  ngOnInit(): void {
+    this.fetchCurrencies();
+  }
+
 
   onRegister(form: NgForm) {
     if (form.invalid) return;
@@ -203,5 +213,22 @@ export class AppComponent {
       return element.amountFrom;
     }
     return element.amountTo;
+  }
+
+  private fetchCurrencies() {
+    this.currencyService.fetchCurrencies().subscribe({
+      next: (result) => {
+
+        for (let key in result) {
+          if (result.hasOwnProperty(key)) {
+            // @ts-ignore
+            this.currencies.set(key, result[key]);
+          }
+        }
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 }
