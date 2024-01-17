@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ClientService} from "./services/client.service";
-import {NgForm} from "@angular/forms";
+import {FormControl, FormGroup, NgForm, ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
 import {Client} from "./models/client";
 import {AccountService} from "./services/account.service";
 import {Transaction} from "./models/transaction";
@@ -16,6 +16,10 @@ export class AppComponent implements OnInit{
   selectedClient: Client | undefined;
   transactions: Transaction[] = [];
 
+  formGroup = new FormGroup({
+    selectedCurrency: new FormControl('')
+  });
+
   columns: string[] = ['id', 'amount', 'transaction type', 'id of the target account', 'amount for the target account', 'conversion rate', 'date'];
 
   offset: number = 0;
@@ -23,6 +27,7 @@ export class AppComponent implements OnInit{
   targetClient: Client | undefined;
 
   currencies: Map<string, string> = new Map();
+  currencyEntries: [string, string][] = [];
 
   constructor(private clientService: ClientService,
               private accountService: AccountService,
@@ -67,9 +72,6 @@ export class AppComponent implements OnInit{
     return list;
   }
 
-  getAccounts() {
-
-  }
 
   onClientChange(client: Client) {
     this.transactions = [];
@@ -94,11 +96,15 @@ export class AppComponent implements OnInit{
     });
   }
 
-  addAccount(form: NgForm) {
+  addAccount(form: any) {
+
+
+    console.log("form value: " + JSON.stringify(form));
+
     if(!this.selectedClient) {
       return;
     }
-    this.accountService.addAccount(form.value.currency, this.selectedClient).subscribe({
+    this.accountService.addAccount(form.selectedCurrency, this.selectedClient).subscribe({
       next: (response) => {
         this.fetchAccounts(this.selectedClient);
       },
@@ -223,6 +229,7 @@ export class AppComponent implements OnInit{
           if (result.hasOwnProperty(key)) {
             // @ts-ignore
             this.currencies.set(key, result[key]);
+            this.currencyEntries = Array.from(this.currencies.entries());
           }
         }
       },

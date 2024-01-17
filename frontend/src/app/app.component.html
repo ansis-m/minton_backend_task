@@ -38,26 +38,42 @@
         <h3>Register at least one more client to continue</h3>
       </ng-template>
     </mat-expansion-panel>
-    <mat-expansion-panel *ngIf="this.selectedClient" (opened)="getAccounts()">
+    <mat-expansion-panel *ngIf="this.selectedClient">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Accounts
         </mat-panel-title>
         <mat-panel-description>
+          register an account
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div *ngIf="accounts && accounts.length">
+      <form [formGroup]="formGroup" (ngSubmit)="addAccount(formGroup.value)">
         <mat-form-field>
           <mat-label>Select</mat-label>
-            <mat-select [(ngModel)]="selectedClient.selectedAccount">
-              <mat-option *ngFor="let account of accounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
-            </mat-select>
+          <mat-select formControlName="selectedCurrency">
+            <mat-option *ngFor="let currency of currencyEntries" [value]="currency[0]">{{currency[0]}} {{currency[1]}}</mat-option>
+          </mat-select>
         </mat-form-field>
-      </div>
-      <form (ngSubmit)="addAccount(form)" #form="ngForm">
-        <input type="text" name="currency" ngModel required placeholder="Currency">
         <button mat-button color="primary" type="submit">Add Account</button>
       </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel *ngIf="this.selectedClient && accounts && accounts.length">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Accounts
+        </mat-panel-title>
+        <mat-panel-description>
+          select account
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div>
+        <mat-form-field>
+          <mat-label>Select</mat-label>
+          <mat-select [(ngModel)]="selectedClient.selectedAccount">
+            <mat-option *ngFor="let account of accounts" [value]="account">{{account.currency}} {{account.amount}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </mat-expansion-panel>
     <mat-expansion-panel *ngIf="this.selectedAccount">
       <mat-expansion-panel-header>
