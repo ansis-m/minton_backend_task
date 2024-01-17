@@ -2,6 +2,7 @@ package com.example.mintos.backend.services;
 
 import com.example.mintos.backend.entities.Account;
 import com.example.mintos.backend.entities.Transaction;
+import com.example.mintos.backend.enums.Currency;
 import com.example.mintos.backend.models.Transfer;
 import com.example.mintos.backend.repositories.AccountRepository;
 import com.example.mintos.backend.repositories.TransactionRepository;
@@ -48,21 +49,29 @@ public class AccountService {
     @Transactional
     public Transaction transfer(Transfer transfer) {
 
+        System.out.println("currency: " + transfer.getCurrency());
+        Account source = accountRepository.findById(transfer.getSourceId()).orElseThrow(() -> new RuntimeException("Source account not found"));
         Account target = accountRepository.findById(transfer.getTargetId()).orElseThrow(() -> new RuntimeException("Target account not found"));
-        Account source = accountRepository.findById(transfer.getSourceId()).orElseThrow(() -> new RuntimeException("Target account not found"));
-        checkBalance(source, transfer);
+        checkTargetCurrency(transfer.getCurrency(), target);
         Double exchangeRate = exchangeService.getRate(target.getCurrency(), source.getCurrency());
-        Double targetAmount = target.getAmount() + transfer.getAmount() * exchangeRate;
-
-        source.setAmount(source.getAmount() - transfer.getAmount());
-        target.setAmount(targetAmount);
+        Double sourceAmount = transfer.getAmount() * exchangeRate;
+        source.setAmount(source.getAmount() - sourceAmount);
+        checkBalance(source);
+        target.setAmount(target.getAmount() + transfer.getAmount());
         accountRepository.save(source);
         accountRepository.save(target);
-        return transactionService.createTransaction(target, source, transfer.getAmount(), transfer.getAmount() * exchangeRate, exchangeRate);
+        return transactionService.createTransaction(target, source, transfer, exchangeRate);
     }
 
-    private void checkBalance(Account source, Transfer transfer) {
-        if (transfer.getAmount() > source.getAmount()) {
+    private void checkTargetCurrency(String currency, Account target) {
+        //todo change the antity to contain instance of enum
+        if(!Currency.getCurrency(currency).equals(Currency.getCurrency(target.getCurrency()))) {
+            throw new RuntimeException(String.format("Target account is in %s, does not accept %s", target.getCurrency(), currency));
+        }
+    }
+
+    private void checkBalance(Account source) {
+        if (source.getAmount() < 0) {
             throw new RuntimeException("Not enough funds in the source account");
         }
     }

@@ -9,4 +9,5 @@ public class Transfer {
     private Long targetId;
     private Long sourceId;
     private Double amount;
+    private String currency;
 }

@@ -177,6 +177,12 @@
           <div *ngIf="targetAccount">
             <form #form="ngForm">
               <input type="number" name="amount" ngModel required placeholder="0.00">
+              <mat-form-field >
+                <mat-label>Select transfer currency</mat-label>
+                <mat-select [(ngModel)]="transferCurrency" name="selectedCurrency">
+                  <mat-option *ngFor="let currency of currencyEntries" [value]="currency[0]">{{currency[0]}} {{currency[1]}}</mat-option>
+                </mat-select>
+              </mat-form-field>
               <button mat-button color="primary" type="submit" (click)="transfer(form)">Transfer</button>
             </form>
           </div>

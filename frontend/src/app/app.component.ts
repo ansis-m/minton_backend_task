@@ -28,6 +28,7 @@ export class AppComponent implements OnInit{
 
   currencies: Map<string, string> = new Map();
   currencyEntries: [string, string][] = [];
+  transferCurrency: string | undefined;
 
   constructor(private clientService: ClientService,
               private accountService: AccountService,
@@ -51,7 +52,11 @@ export class AppComponent implements OnInit{
   }
 
   get targetClients() {
-    return this.clients.filter(client => client.clientId !== this.selectedClient?.clientId);
+    let targetClients =  this.clients.filter(client => client.clientId !== this.selectedClient?.clientId);
+    if (this.targetClient && !targetClients.includes(this.targetClient)) {
+      this.targetClient = undefined;
+    }
+    return targetClients;
   }
 
   get targetAccounts() {
@@ -192,10 +197,14 @@ export class AppComponent implements OnInit{
   }
 
   transfer(form: NgForm) {
-    if (!form.value.amount || !this.selectedAccount?.accountId || !this.targetAccount?.accountId) {
+
+    console.log("transfer currency: " + this.transferCurrency);
+
+
+    if (!form.value.amount || !this.selectedAccount?.accountId || !this.targetAccount?.accountId || !this.transferCurrency) {
       return;
     }
-    let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount)
+    let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount, this.transferCurrency)
 
     this.accountService.transfer(transfer).subscribe({
       next: (result: any) => {

@@ -24,28 +24,28 @@ public class CurrencyExchangeService {
 
 
     public Double getRate(String targetCurrency, String sourceCurrency) {
-
-
         if(targetCurrency.equals(sourceCurrency)) {
             return 1.00000;
         }
         try {
-            ResponseEntity<Rates> rates = getCurrencyExchangeRates(sourceCurrency, targetCurrency);
+            ResponseEntity<Rates> rates = getCurrencyExchangeRates(targetCurrency, sourceCurrency);
             if (!rates.getStatusCode().is2xxSuccessful()){
                 throw new RuntimeException("Exchange api failed");
             }
-            return rates.getBody().getData().get(targetCurrency);
+            if (rates.getBody().getData().get(sourceCurrency) != null) {
+                return rates.getBody().getData().get(sourceCurrency);
+            } throw new RuntimeException("api returned null");
         } catch (Exception e) {
             e.printStackTrace();
-            return getDefaultRate(sourceCurrency, targetCurrency);
+            return getDefaultRate(targetCurrency, sourceCurrency);
         }
 
     }
 
-    private Double getDefaultRate(String sourceCurrency, String targetCurrency) {
+    private Double getDefaultRate(String base, String target) {
         try{
-            double baseCurrencyToUSD = Currency.getCurrency(sourceCurrency).getExchangeRateToUSD();
-            double targetCurrencyToUSD = Currency.getCurrency(targetCurrency).getExchangeRateToUSD();
+            double baseCurrencyToUSD = Currency.getCurrency(base).getExchangeRateToUSD();
+            double targetCurrencyToUSD = Currency.getCurrency(target).getExchangeRateToUSD();
             return baseCurrencyToUSD / targetCurrencyToUSD;
         } catch (NullPointerException e) {
             throw new RuntimeException("Transfer failed because currency is not supported");

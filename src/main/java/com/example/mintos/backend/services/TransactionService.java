@@ -2,6 +2,7 @@ package com.example.mintos.backend.services;
 
 import com.example.mintos.backend.entities.Account;
 import com.example.mintos.backend.entities.Transaction;
+import com.example.mintos.backend.models.Transfer;
 import com.example.mintos.backend.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,13 +31,13 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public Transaction createTransaction(Account target, Account source, Double amount, Double targetAmount, Double exchangeRate) {
+    public Transaction createTransaction(Account target, Account source, Transfer transfer, Double exchangeRate) {
         Transaction transaction = new Transaction();
         transaction.setAccountFrom(source);
         transaction.setAccountTo(target);
         transaction.setConversionRate(exchangeRate);
-        transaction.setAmountFrom(amount * -1);
-        transaction.setAmountTo(targetAmount);
+        transaction.setAmountFrom(transfer.getAmount() * exchangeRate);
+        transaction.setAmountTo(transfer.getAmount());
         return transactionRepository.save(transaction);
     }
 }
