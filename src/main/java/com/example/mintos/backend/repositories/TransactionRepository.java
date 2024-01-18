@@ -13,9 +13,13 @@ import java.util.List;
 @Repository
 @RepositoryRestResource(collectionResourceRel = "transaction", path = "transaction")
 @CrossOrigin
-public interface TransactionRepository extends JpaRepository<Transaction, Long>, JpaSpecificationExecutor<Transaction> {
+public interface TransactionRepository extends JpaRepository<Transaction, Long>,
+        JpaSpecificationExecutor<Transaction> {
 
-    @Query(value = "SELECT * FROM transaction WHERE account_from = :accountId OR account_to = :accountId ORDER BY created_at DESC LIMIT :limit OFFSET :offset",
+    @Query(value = "SELECT * FROM transaction WHERE account_from = :accountId OR account_to = "
+                   + ":accountId ORDER BY created_at DESC LIMIT :limit OFFSET :offset",
             nativeQuery = true)
-    List<Transaction> findTransactionsWithOffsetAndLimit(Long accountId, Integer limit, Integer offset);
+    List<Transaction> findTransactionsWithOffsetAndLimit(Long accountId,
+                                                         Integer limit,
+                                                         Integer offset);
 }

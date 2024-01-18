@@ -1,6 +1,7 @@
 package com.example.mintos.backend.enums;
 
-import java.util.Arrays;
+import com.example.mintos.backend.exceptions.CurrencyNotSupportedException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,14 +40,35 @@ public enum Currency {
     THB("Thai Baht", "THB", 0.028),
     ZAR("South African Rand", "ZAR", 0.053);
 
-    private String currencyName;
-    private String currencyCode;
-    private double exchangeRateToUSD;
+    private final String currencyName;
+    private final String currencyCode;
+    private final double exchangeRateToUSD;
 
     Currency(String currencyName, String currencyCode, double exchangeRateToUSD) {
         this.currencyName = currencyName;
         this.currencyCode = currencyCode;
         this.exchangeRateToUSD = exchangeRateToUSD;
+    }
+
+    public static Currency getCurrency(String currencyIdentifier) {
+        for (Currency currency : values()) {
+            if (currency.getCurrencyCode()
+                        .equalsIgnoreCase(currencyIdentifier.trim()) || currency.getCurrencyName()
+                                                                                .equalsIgnoreCase(
+                                                                                        currencyIdentifier.trim())) {
+                return currency;
+            }
+        }
+        throw new CurrencyNotSupportedException(currencyIdentifier.trim()
+                                                + " currency is not supported!");
+    }
+
+    public static Map<String, String> getCurrencyCodeToNameMap() {
+        Map<String, String> currencyMap = new HashMap<>();
+        for (Currency currency : values()) {
+            currencyMap.put(currency.getCurrencyCode(), currency.getCurrencyName());
+        }
+        return currencyMap;
     }
 
     public String getCurrencyName() {
@@ -59,28 +81,5 @@ public enum Currency {
 
     public double getExchangeRateToUSD() {
         return exchangeRateToUSD;
-    }
-
-    public static Currency getCurrency(String currencyIdentifier) {
-        for (Currency currency : values()) {
-            if (currency.getCurrencyCode().equalsIgnoreCase(currencyIdentifier) || currency.getCurrencyName().equalsIgnoreCase(currencyIdentifier)) {
-                return currency;
-            }
-        }
-        return null;
-    }
-
-    public static boolean contains(String currencyIdentifier) {
-        return Arrays.stream(values()).anyMatch(currency ->
-                currency.getCurrencyCode().equalsIgnoreCase(currencyIdentifier) || currency.getCurrencyName().equalsIgnoreCase(currencyIdentifier)
-        );
-    }
-
-    public static Map<String, String> getCurrencyCodeToNameMap() {
-        Map<String, String> currencyMap = new HashMap<>();
-        for (Currency currency : values()) {
-            currencyMap.put(currency.getCurrencyCode(), currency.getCurrencyName());
-        }
-        return currencyMap;
     }
 }

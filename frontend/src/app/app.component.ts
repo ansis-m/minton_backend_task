@@ -89,7 +89,7 @@ export class AppComponent implements OnInit{
     }
     return this.accountService.fetchAccounts(client).subscribe({
       next: (response) => {
-        client.accounts = response._embedded.account
+        client.accounts = response.content
         client.accounts.forEach(account => {
           if (account?.accountId === client.selectedAccount?.accountId) {
             client.selectedAccount = account;

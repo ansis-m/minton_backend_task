@@ -1,8 +1,12 @@
 package com.example.mintos.backend.entities;
 
+import com.example.mintos.backend.enums.Currency;
+import com.example.mintos.backend.utils.CurrencyConverter;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -39,7 +43,8 @@ public class Transaction {
     private LocalDateTime createdAt;
 
     @Column(name = "currency", nullable = false)
-    private String currency;
+    @Convert(converter = CurrencyConverter.class)
+    private Currency currency;
 
     @PrePersist
     protected void onCreate() {

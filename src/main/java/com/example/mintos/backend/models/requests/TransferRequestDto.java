@@ -1,10 +1,9 @@
-package com.example.mintos.backend.models;
+package com.example.mintos.backend.models.requests;
 
 import lombok.Data;
-import lombok.Getter;
 
 @Data
-public class Transfer {
+public class TransferRequestDto {
 
     private Long targetId;
     private Long sourceId;

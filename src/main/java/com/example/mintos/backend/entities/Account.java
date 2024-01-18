@@ -1,9 +1,14 @@
 package com.example.mintos.backend.entities;
 
+import com.example.mintos.backend.enums.Currency;
+import com.example.mintos.backend.utils.CurrencyConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -24,7 +29,8 @@ public class Account {
     private Client client;
 
     @Column(nullable = false)
-    private String currency;
+    @Convert(converter = CurrencyConverter.class)
+    private Currency currency;
 
     @Column(nullable = false)
     @Min(0)

@@ -13,36 +13,26 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  addClient(client: Client) {
-    return this.http.post(this.apiUrl, client).subscribe();
-  }
-
-  getClients() {
-    return this.http.get(this.apiUrl).subscribe(response => {
-      // @ts-ignore
-      this.clients = response._embedded.client;
-    });
-  }
-
   fetchAccounts(client: Client): Observable<any> {
-    return this.http.get(client._links.accounts.href);
+    const body = {"clientId": client.clientId, "page": 0, "size": 100};
+    return this.http.post(this.apiUrl, body);
   }
 
   addAccount(currency: string, selectedClient: Client): Observable<any> {
-    const params = new HttpParams()
-      .set('clientId', selectedClient.clientId)
-      .set('currency', currency);
+    const body =
+      {'clientId': selectedClient.clientId, currency};
 
-    return this.http.post(this.apiUrl + '/create/account', null, { params });
+    return this.http.post(this.apiUrl + '/create', body);
   }
 
   addFunds(selectedAccount: Account, amount: number, currency: string): Observable<any> {
-    const params = new HttpParams()
-      .set('accountId', selectedAccount.accountId)
-      .set('amount', amount)
-      .set('currency', currency);
+    const body = {
+      'accountId': selectedAccount.accountId,
+      'amount': amount,
+      'currency': currency
+    };
 
-    return this.http.post(this.apiUrl + '/add/funds', null, { params });
+    return this.http.post(this.apiUrl + '/add', body);
   }
 
   getTransactions(limit: number, offset: number, selectedAccount: Account | undefined): Observable<any> {
@@ -52,7 +42,7 @@ export class AccountService {
       .set('limit', limit)
       .set('offset', offset)
 
-    return this.http.post(this.apiUrl + '/transactions', null, { params });
+    return this.http.get(this.apiUrl + '/transactions', { params });
   }
 
   transfer(transfer: Transfer) {

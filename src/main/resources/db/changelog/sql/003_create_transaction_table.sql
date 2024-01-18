@@ -1,16 +1,17 @@
 --liquibase formatted sql
 
 --changeset ansis:create-transaction-table
-CREATE TABLE transaction (
-                             transaction_id SERIAL NOT NULL,
-                             account_from INT REFERENCES account(account_id),
-                             account_to INT REFERENCES account(account_id),
-                             amount_from DECIMAL(15,2),
-                             amount_to DECIMAL(15,2),
-                             currency VARCHAR(3) NOT NULL,
-                             conversion_rate DECIMAL(10,4),
-                             created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                             CONSTRAINT pk_transaction PRIMARY KEY (transaction_id) USING INDEX TABLESPACE pg_default
+CREATE TABLE transaction
+(
+    transaction_id  SERIAL                                                NOT NULL,
+    account_from    INT REFERENCES account (account_id),
+    account_to      INT REFERENCES account (account_id),
+    amount_from     DECIMAL(15, 2),
+    amount_to       DECIMAL(15, 2),
+    currency        VARCHAR(3)                                            NOT NULL,
+    conversion_rate DECIMAL(10, 4),
+    created_at      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT pk_transaction PRIMARY KEY (transaction_id) USING INDEX TABLESPACE pg_default
 ) TABLESPACE pg_default;
 
 COMMENT ON COLUMN transaction.transaction_id IS 'Primary key';

@@ -17,7 +17,7 @@ export class ClientService {
   getClients() {
     return this.http.get(this.apiUrl).subscribe(response => {
       // @ts-ignore
-      this.clients = response._embedded.client;
+      this.clients = response.content;
     });
   }
 
