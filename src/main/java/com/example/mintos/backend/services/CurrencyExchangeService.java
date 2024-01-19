@@ -2,6 +2,7 @@ package com.example.mintos.backend.services;
 
 import com.example.mintos.backend.enums.Currency;
 import com.example.mintos.backend.models.requests.RatesDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,15 @@ import java.util.Map;
 @Service
 public class CurrencyExchangeService {
 
-
     private final RestTemplate restTemplate = new RestTemplate();
     private final String API_URL = "https://api.freecurrencyapi.com/v1/latest";
-    private final String API_KEY = "fca_live_A3k7IjJEm4g5IOLaqB2e9VWIBVM5HRAhv1J2hxP0";
+
+    @Value("${API_KEY}")
+    private String API_KEY;
 
 
     public Double getRate(Currency targetCurrency, Currency sourceCurrency) {
+
         if (targetCurrency.equals(sourceCurrency)) {
             return 1.00000;
         }
@@ -55,12 +58,11 @@ public class CurrencyExchangeService {
 
     private ResponseEntity<RatesDto> getCurrencyExchangeRates(Currency base, Currency target) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(API_URL)
-                                                           .queryParam("apikey", API_KEY)
-                                                           .queryParam("base_currency",
-                                                                       base.getCurrencyCode())
-                                                           .queryParam("currencies",
-                                                                       target.getCurrencyCode());
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(API_URL)
+                .queryParam("apikey", API_KEY)
+                .queryParam("base_currency", base.getCurrencyCode())
+                .queryParam("currencies", target.getCurrencyCode());
 
         return restTemplate.exchange(
                 builder.toUriString(),

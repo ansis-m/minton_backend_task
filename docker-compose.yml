@@ -21,6 +21,8 @@ services:
 
   app:
     image: ansism/mintosbackend:latest
+    environment:
+      -
     ports:
       - "8089:8089"
     depends_on:

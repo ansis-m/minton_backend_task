@@ -197,7 +197,6 @@ export class AppComponent implements OnInit{
     let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount, this.transferCurrency)
     this.accountService.transfer(transfer).subscribe({
       next: (result: any) => {
-        console.log(result);
         this.fetchAccounts(this.selectedClient);
         this.fetchAccounts(this.targetClient);
       },

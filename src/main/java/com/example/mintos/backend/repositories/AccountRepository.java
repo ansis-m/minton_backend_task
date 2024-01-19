@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Repository
-@CrossOrigin
 public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpecificationExecutor<Account> {
     Page<Account> findByCurrency(Currency currency, Pageable pageable);
     @Query("select a from Account a where a.client.clientId = ?1")
