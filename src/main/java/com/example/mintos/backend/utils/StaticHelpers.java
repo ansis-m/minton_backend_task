@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 
 public class StaticHelpers {
 
-    private static final Integer DEFAULT_PAGE_SIZE = 20;
-    private static final Integer DEFAULT_PAGE_NUMBER = 0;
+    static final Integer DEFAULT_PAGE_SIZE = 20;
+    static final Integer DEFAULT_PAGE_NUMBER = 0;
 
     public static Pageable getPageable(Integer page, Integer size){
         if (page != null && size != null) {
