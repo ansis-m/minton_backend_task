@@ -55,11 +55,11 @@ public class AccountService {
         Pageable pageable = getPageable(request.getPage(), request.getSize());
         if (request.getCurrency() != null) {
             return accountRepository
-                    .findByClientIdAndCurrency(request.getClientId(), request.getCurrency(), pageable)
+                    .findByClientIdAndCurrency(request.getId(), request.getCurrency(), pageable)
                     .map(responseMapper::map);
         }
         return accountRepository
-                .findByClientId(request.getClientId(), pageable)
+                .findByClientId(request.getId(), pageable)
                 .map(responseMapper::map);
     }
 
@@ -67,8 +67,8 @@ public class AccountService {
     public AccountResponseDto addFunds(DepositRequestDto depositRequestDto) {
 
         Account account = accountRepository
-                .findById(depositRequestDto.getAccountId())
-                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT404, depositRequestDto.getAccountId()));
+                .findById(depositRequestDto.getId())
+                .orElseThrow(() -> new AccountNotFoundException(ACCOUNT404, depositRequestDto.getId()));
 
         Double rate = getRate(depositRequestDto.getCurrency(), account.getCurrency());
 

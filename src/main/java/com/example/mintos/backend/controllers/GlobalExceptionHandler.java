@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> runtimeException(RuntimeException ex, HttpServletRequest request) {
+        ex.printStackTrace();
         return getObjectResponseEntity(ex, request);
     }
 

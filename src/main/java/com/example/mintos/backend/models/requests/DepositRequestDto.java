@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class DepositRequestDto {
 
-    private Long accountId;
+    private Long id;
     private Double amount;
     @JsonDeserialize(using = CurrencyDeserializer.class)
     private Currency currency;

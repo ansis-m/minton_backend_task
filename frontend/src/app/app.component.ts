@@ -52,7 +52,7 @@ export class AppComponent implements OnInit{
   }
 
   get targetClients() {
-    let targetClients =  this.clients.filter(client => client.clientId !== this.selectedClient?.clientId);
+    let targetClients =  this.clients.filter(client => client.id !== this.selectedClient?.id);
     if (this.targetClient && !targetClients.includes(this.targetClient)) {
       this.targetClient = undefined;
     }
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit{
   get clients(): Client[]{
     let list = this.clientService.getClientList();
     list.forEach((client, index) => {
-      if (client.clientId === this.selectedClient?.clientId) {
+      if (client.id === this.selectedClient?.id) {
          list[index] = this.selectedClient;
       }
     })
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit{
       next: (response) => {
         client.accounts = response.content
         client.accounts.forEach(account => {
-          if (account?.accountId === client.selectedAccount?.accountId) {
+          if (account?.id === client.selectedAccount?.id) {
             client.selectedAccount = account;
           }
         })
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit{
 
   getAmount(element: Transaction) {
 
-    if (element?.accountTo?.accountId === this.selectedAccount?.accountId) {
+    if (element?.accountTo?.id === this.selectedAccount?.id) {
       return element.amountTo;
     }
     return element.amountFrom;
@@ -160,13 +160,13 @@ export class AppComponent implements OnInit{
 
   getType(element: Transaction) {
     if (element.amountFrom == null || element.accountTo == null) {
-      if (this.selectedAccount?.accountId == element.accountTo?.accountId){
+      if (this.selectedAccount?.id == element.accountTo?.id){
         return "addition of funds";
       }
       return "withdrawal";
     }
 
-    if (this.selectedClient?.selectedAccount?.accountId === element.accountFrom?.accountId) {
+    if (this.selectedClient?.selectedAccount?.id === element.accountFrom?.id) {
       return 'outgoing transfer';
     }
 
@@ -179,9 +179,9 @@ export class AppComponent implements OnInit{
       case "withdrawal":
         return 'N/A';
       case "incoming transfer":
-        return element.accountFrom?.accountId;
+        return element.accountFrom?.id;
       default:
-        return element.accountTo?.accountId;
+        return element.accountTo?.id;
     }
   }
 
@@ -191,10 +191,10 @@ export class AppComponent implements OnInit{
 
   transfer(form: NgForm) {
 
-    if (!form.value.amount || !this.selectedAccount?.accountId || !this.targetAccount?.accountId || !this.transferCurrency) {
+    if (!form.value.amount || !this.selectedAccount?.id || !this.targetAccount?.id || !this.transferCurrency) {
       return;
     }
-    let transfer = new Transfer(this.selectedAccount?.accountId, this.targetAccount?.accountId, form.value.amount, this.transferCurrency)
+    let transfer = new Transfer(this.selectedAccount?.id, this.targetAccount?.id, form.value.amount, this.transferCurrency)
     this.accountService.transfer(transfer).subscribe({
       next: (result: any) => {
         this.fetchAccounts(this.selectedClient);
@@ -212,7 +212,7 @@ export class AppComponent implements OnInit{
     if(!this.getType(element).includes("transfer")){
       return 'N/A';
     }
-    if (element?.accountTo?.accountId === this.selectedAccount?.accountId) {
+    if (element?.accountTo?.id === this.selectedAccount?.id) {
       return element.amountFrom;
     }
     return element.amountTo;

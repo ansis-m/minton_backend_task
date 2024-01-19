@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpecificationExecutor<Account> {
 
-    @Query("select a from Account a where a.client.clientId = ?1")
+    @Query("select a from Account a where a.client.id = ?1")
     Page<Account> findByClientId(Long clientId, Pageable pageable);
 
-    @Query("select a from Account a where a.client.clientId = ?1 and a.currency = ?2")
+    @Query("select a from Account a where a.client.id = ?1 and a.currency = ?2")
     Page<Account> findByClientIdAndCurrency(Long clientId, Currency currency, Pageable pageable);
 
 }

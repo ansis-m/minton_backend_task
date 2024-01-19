@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AccountResponseDto {
 
-    private Long accountId;
+    private Long id;
     private Currency currency;
     private Double amount;
 

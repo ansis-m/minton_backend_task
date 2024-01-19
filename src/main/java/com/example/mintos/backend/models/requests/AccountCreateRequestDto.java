@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class AccountCreateRequestDto {
-    private Long clientId;
+    private Long id;
     @JsonDeserialize(using = CurrencyDeserializer.class)
     private Currency currency;
 

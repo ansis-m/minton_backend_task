@@ -7,7 +7,7 @@ import java.util.Set;
 @Data
 public class ClientResponseDto {
 
-    private Long clientId;
+    private Long id;
     private String name;
     private Set<AccountResponseDto> accounts;
 

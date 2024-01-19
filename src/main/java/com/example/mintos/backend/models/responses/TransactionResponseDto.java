@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class TransactionResponseDto {
 
-    private Long transactionId;
+    private Long id;
     private Account accountFrom;
     private Account accountTo;
     private Double amountFrom;

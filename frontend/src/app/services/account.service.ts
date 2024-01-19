@@ -14,20 +14,20 @@ export class AccountService {
   constructor(private http: HttpClient) {}
 
   fetchAccounts(client: Client): Observable<any> {
-    const body = {"clientId": client.clientId, "page": 0, "size": 100};
+    const body = {"id": client.id, "page": 0, "size": 100};
     return this.http.post(this.apiUrl, body);
   }
 
   addAccount(currency: string, selectedClient: Client): Observable<any> {
     const body =
-      {'clientId': selectedClient.clientId, currency};
+      {'id': selectedClient.id, currency};
 
     return this.http.post(this.apiUrl + '/create', body);
   }
 
   addFunds(selectedAccount: Account, amount: number, currency: string): Observable<any> {
     const body = {
-      'accountId': selectedAccount.accountId,
+      'id': selectedAccount.id,
       'amount': amount,
       'currency': currency
     };
@@ -38,7 +38,7 @@ export class AccountService {
   getTransactions(limit: number, offset: number, selectedAccount: Account | undefined): Observable<any> {
     const params = new HttpParams()
       // @ts-ignore
-      .set('accountId', selectedAccount.accountId)
+      .set('accountId', selectedAccount.id)
       .set('limit', limit)
       .set('offset', offset)
 

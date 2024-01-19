@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ import java.util.Set;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long accountId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
@@ -39,10 +40,10 @@ public class Account {
     @OneToMany(mappedBy = "accountFrom")
     @ToString.Exclude
     @JsonIgnore
-    private Set<Transaction> transactionsFrom;
+    private Set<Transaction> transactionsFrom = new HashSet<>();
 
     @OneToMany(mappedBy = "accountTo")
     @ToString.Exclude
     @JsonIgnore
-    private Set<Transaction> transactionsTo;
+    private Set<Transaction> transactionsTo = new HashSet<>();
 }

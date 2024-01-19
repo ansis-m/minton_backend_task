@@ -1,9 +1,9 @@
 <div class="accordion-container">
   <div class="header">
-    <h4 *ngIf="selectedClient">Selected client: {{selectedClient.name}} id {{selectedClient.clientId}}</h4>
+    <h4 *ngIf="selectedClient">Selected client: {{selectedClient.name}} id {{selectedClient.id}}</h4>
   </div>
   <div class="header">
-    <h4 *ngIf="selectedAccount">Selected account: {{selectedAccount.currency}} {{selectedAccount.amount}} id {{selectedAccount.accountId}}</h4>
+    <h4 *ngIf="selectedAccount">Selected account: {{selectedAccount.currency}} {{selectedAccount.amount}} id {{selectedAccount.id}}</h4>
   </div>
   <mat-accordion>
     <mat-expansion-panel>
@@ -31,7 +31,7 @@
       <mat-form-field *ngIf="clients.length; else noClientsBlock">
         <mat-label>Select</mat-label>
         <mat-select [(ngModel)]="selectedClient" (ngModelChange)="onClientChange($event)">
-            <mat-option *ngFor="let client of clients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
+            <mat-option *ngFor="let client of clients" [value]="client">{{client.name}} id: {{client.id}}</mat-option>
         </mat-select>
       </mat-form-field>
       <ng-template #noClientsBlock>
@@ -81,7 +81,7 @@
           Transaction history
         </mat-panel-title>
         <mat-panel-description>
-          {{selectedAccount.currency}} account id: {{selectedAccount.accountId}}
+          {{selectedAccount.currency}} account id: {{selectedAccount.id}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <form #form="ngForm" style="display: flex; justify-content: center; gap: 15px;">
@@ -99,7 +99,7 @@
 
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> Transaction Id </th>
-          <td mat-cell *matCellDef="let element"> {{element.transactionId}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
         <ng-container matColumnDef="amount">
@@ -176,7 +176,7 @@
         <mat-form-field >
           <mat-label>Select recipient</mat-label>
           <mat-select [(ngModel)]="targetClient" (ngModelChange)="onClientChange($event)">
-            <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}} id: {{client.clientId}}</mat-option>
+            <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}} id: {{client.id}}</mat-option>
           </mat-select>
         </mat-form-field>
         <div *ngIf="selectedClient && targetClient">

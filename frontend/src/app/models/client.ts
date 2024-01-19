@@ -4,8 +4,7 @@ import {Account} from "./account";
 export class Client {
   constructor(
     public name: string,
-    public clientId: number,
-    public _links: Links,
+    public id: number,
     public accounts: Account[] = [],
     public selectedAccount: Account | undefined = undefined
 

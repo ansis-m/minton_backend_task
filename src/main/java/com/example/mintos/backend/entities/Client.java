@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,12 +18,12 @@ import java.util.Set;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long clientId;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "client")
     @ToString.Exclude
-    private Set<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
 }
