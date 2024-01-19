@@ -9,4 +9,5 @@ public class TransferRequestDto {
     private Long sourceId;
     private Double amount;
     private String currency;
+
 }

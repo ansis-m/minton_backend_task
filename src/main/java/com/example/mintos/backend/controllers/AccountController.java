@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/account")
 public class AccountController {
 
-
     private final ClientService clientService;
     private final AccountService accountService;
 
@@ -33,7 +32,6 @@ public class AccountController {
     public ResponseEntity<Page<AccountResponseDto>> getAccounts(@RequestBody AccountGetRequestDto request) {
         return ResponseEntity.ok(accountService.getAccounts(request));
     }
-
 
     @PostMapping("/create")
     public ResponseEntity<AccountResponseDto> createAccount(@RequestBody AccountCreateRequestDto accountCreateRequestDto) {
@@ -50,10 +48,9 @@ public class AccountController {
     @GetMapping("/transactions")
     public ResponseEntity<List<TransactionResponseDto>> getTransactions(@RequestParam Long accountId,
                                                                         @RequestParam Integer limit,
-                                                                        @RequestParam Integer offset) {
-        List<TransactionResponseDto>
-                transactions =
-                accountService.getTransactions(accountId, limit, offset);
+                                                                        @RequestParam Integer offset)
+    {
+        List<TransactionResponseDto> transactions = accountService.getTransactions(accountId, limit, offset);
         return ResponseEntity.ok(transactions);
     }
 

@@ -14,49 +14,43 @@ import java.util.Map;
 @Service
 public class CurrencyExchangeService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final String API_URL = "https://api.freecurrencyapi.com/v1/latest";
+    private static final RestTemplate restTemplate = new RestTemplate();
+    private static final String API_URL = "https://api.freecurrencyapi.com/v1/latest";
+    private static final String API_FAIL_MESSAGE = "Exchange api failed with status code: ";
+    private static final String API_RETURN_NULL = "Exchange api returned null.";
 
     @Value("${API_KEY}")
-    private String API_KEY;
+    private static String API_KEY;
 
 
-    public Double getRate(Currency targetCurrency, Currency sourceCurrency) {
+    public static Double getRate(Currency targetCurrency, Currency sourceCurrency) {
 
         if (targetCurrency.equals(sourceCurrency)) {
             return 1.00000;
         }
         try {
-            ResponseEntity<RatesDto>
-                    rates =
-                    getCurrencyExchangeRates(targetCurrency, sourceCurrency);
-            if (!rates.getStatusCode()
-                      .is2xxSuccessful()) {
-                throw new RuntimeException("Exchange api failed with status code: "
-                                           + rates.getStatusCode());
+            ResponseEntity<RatesDto> rates = getCurrencyExchangeRates(targetCurrency, sourceCurrency);
+            if (!rates.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException(API_FAIL_MESSAGE + rates.getStatusCode());
             }
-            if (rates.getBody()
-                     .getData()
-                     .get(sourceCurrency.getCurrencyCode()) != null) {
-                return rates.getBody()
-                            .getData()
-                            .get(sourceCurrency.getCurrencyCode());
+            Double result = rates.getBody().getData().get(sourceCurrency.getCurrencyCode());
+            if (result != null) {
+                return result;
             }
-            throw new RuntimeException("Exchange api returned null.");
+            throw new RuntimeException(API_RETURN_NULL);
         } catch (Exception e) {
             e.printStackTrace();
             return getDefaultRate(targetCurrency, sourceCurrency);
         }
-
     }
 
-    private Double getDefaultRate(Currency base, Currency target) {
+    private static Double getDefaultRate(Currency base, Currency target) {
         double baseCurrencyToUSD = base.getExchangeRateToUSD();
         double targetCurrencyToUSD = target.getExchangeRateToUSD();
         return baseCurrencyToUSD / targetCurrencyToUSD;
     }
 
-    private ResponseEntity<RatesDto> getCurrencyExchangeRates(Currency base, Currency target) {
+    private static ResponseEntity<RatesDto> getCurrencyExchangeRates(Currency base, Currency target) {
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(API_URL)
@@ -72,7 +66,7 @@ public class CurrencyExchangeService {
         );
     }
 
-    public Map<String, String> getCurrencies() {
+    public static Map<String, String> getCurrencies() {
         return Currency.getCurrencyCodeToNameMap();
     }
 }

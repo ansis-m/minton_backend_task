@@ -7,4 +7,5 @@ import java.util.HashMap;
 @Data
 public class RatesDto {
     private HashMap<String, Double> data;
+
 }

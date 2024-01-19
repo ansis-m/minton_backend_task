@@ -23,7 +23,8 @@ public class ClientController {
 
     @GetMapping
     ResponseEntity<Page<ClientResponseDto>> getClients(@RequestParam(required = false) Integer page,
-                                                       @RequestParam(required = false) Integer size){
+                                                       @RequestParam(required = false) Integer size)
+    {
         return ResponseEntity.ok(clientService.getClients(page, size));
     }
 }

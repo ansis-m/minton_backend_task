@@ -29,7 +29,7 @@ public class TransactionService {
         }
         transaction.setConversionRate(rate);
         transaction.setCurrency(currency);
-        transactionRepository.save(transaction);
+        transactionRepository.saveAndFlush(transaction);
     }
 
     public Transaction createTransaction(Account target,
@@ -43,6 +43,6 @@ public class TransactionService {
         transaction.setAmountFrom(transferRequestDto.getAmount() * exchangeRate);
         transaction.setAmountTo(transferRequestDto.getAmount());
         transaction.setCurrency(Currency.getCurrency(transferRequestDto.getCurrency()));
-        return transactionRepository.save(transaction);
+        return transactionRepository.saveAndFlush(transaction);
     }
 }

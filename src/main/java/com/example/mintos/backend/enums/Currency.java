@@ -43,6 +43,7 @@ public enum Currency {
     private final String currencyName;
     private final String currencyCode;
     private final double exchangeRateToUSD;
+    private static final String CURRENCY_NOT_SUPPORTED = " currency is not supported!";
 
     Currency(String currencyName, String currencyCode, double exchangeRateToUSD) {
         this.currencyName = currencyName;
@@ -52,15 +53,12 @@ public enum Currency {
 
     public static Currency getCurrency(String currencyIdentifier) {
         for (Currency currency : values()) {
-            if (currency.getCurrencyCode()
-                        .equalsIgnoreCase(currencyIdentifier.trim()) || currency.getCurrencyName()
-                                                                                .equalsIgnoreCase(
-                                                                                        currencyIdentifier.trim())) {
+            if (currency.getCurrencyCode().equalsIgnoreCase(currencyIdentifier.trim())
+                || currency.getCurrencyName().equalsIgnoreCase(currencyIdentifier.trim())) {
                 return currency;
             }
         }
-        throw new CurrencyNotSupportedException(currencyIdentifier.trim()
-                                                + " currency is not supported!");
+        throw new CurrencyNotSupportedException(currencyIdentifier.trim() + CURRENCY_NOT_SUPPORTED);
     }
 
     public static Map<String, String> getCurrencyCodeToNameMap() {

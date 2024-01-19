@@ -20,4 +20,5 @@ public interface ResponseMapper {
     AccountResponseDto map(Account account);
 
     ClientResponseDto map(Client client);
+
 }

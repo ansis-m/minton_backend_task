@@ -10,4 +10,5 @@ public class ClientResponseDto {
     private Long clientId;
     private String name;
     private Set<AccountResponseDto> accounts;
+
 }

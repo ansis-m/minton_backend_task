@@ -7,9 +7,11 @@ import lombok.Data;
 
 @Data
 public class AccountGetRequestDto {
+
     private Long clientId;
     @JsonDeserialize(using = CurrencyDeserializer.class)
     private Currency currency;
     private Integer page;
     private Integer size;
+
 }

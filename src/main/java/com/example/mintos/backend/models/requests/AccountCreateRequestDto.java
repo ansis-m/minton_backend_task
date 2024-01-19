@@ -10,4 +10,5 @@ public class AccountCreateRequestDto {
     private Long clientId;
     @JsonDeserialize(using = CurrencyDeserializer.class)
     private Currency currency;
+
 }
