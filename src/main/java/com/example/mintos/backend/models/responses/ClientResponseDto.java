@@ -2,6 +2,7 @@ package com.example.mintos.backend.models.responses;
 
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -9,6 +10,6 @@ public class ClientResponseDto {
 
     private Long id;
     private String name;
-    private Set<AccountResponseDto> accounts;
+    private Set<AccountResponseDto> accounts = new HashSet<>();
 
 }
