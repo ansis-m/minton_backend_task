@@ -6,13 +6,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import java.util.List;
 
 @Repository
-@RepositoryRestResource(collectionResourceRel = "transaction", path = "transaction")
-@CrossOrigin
+@RepositoryRestResource(exported = false) // remove annotation to expose crud REST endpoints
 public interface TransactionRepository extends JpaRepository<Transaction, Long>, JpaSpecificationExecutor<Transaction> {
 
     @Query(value = "SELECT * FROM transaction WHERE account_from = :accountId OR account_to = "

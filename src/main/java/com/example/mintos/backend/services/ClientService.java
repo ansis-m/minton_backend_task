@@ -4,6 +4,7 @@ import com.example.mintos.backend.entities.Account;
 import com.example.mintos.backend.entities.Client;
 import com.example.mintos.backend.mappers.ResponseMapper;
 import com.example.mintos.backend.models.requests.AccountCreateRequestDto;
+import com.example.mintos.backend.models.requests.ClientCreateRequestDto;
 import com.example.mintos.backend.models.responses.AccountResponseDto;
 import com.example.mintos.backend.models.responses.ClientResponseDto;
 import com.example.mintos.backend.repositories.AccountRepository;
@@ -61,9 +62,18 @@ public class ClientService {
         return clientRepository.findAll(pageable).map(responseMapper::map);
     }
 
-    public ClientResponseDto registerClient(Map<String, String> name) {
+    public ClientResponseDto registerClient(ClientCreateRequestDto clientRequest) {
         Client client = new Client();
-        client.setName(name.get("name"));
+        client.setName(clientRequest.getName());
         return responseMapper.map(clientRepository.saveAndFlush(client));
+    }
+
+    public ClientResponseDto getClient(Long id) {
+        return responseMapper
+                .map(
+                        clientRepository
+                                .findById(id)
+                                .orElseThrow(() -> new RuntimeException("Client not found"))
+                );
     }
 }
