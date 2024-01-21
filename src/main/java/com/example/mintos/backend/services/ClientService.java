@@ -50,7 +50,6 @@ public class ClientService {
         newAccount.setClient(client);
         newAccount.setCurrency(accountCreateRequestDto.getCurrency());
         newAccount.setAmount(0.0);
-        logger.info("");
         return responseMapper.map(accountRepository.saveAndFlush(newAccount));
     }
 

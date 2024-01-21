@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-docker logout
+#docker logout
 docker login
 
 #docker-compose down

@@ -9,4 +9,4 @@ RUN npm run build
 
 FROM nginx:1.23.2-alpine
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY --from=build-stage /usr/src/app/dist/mintos /usr/share/nginx/html
+COPY --from=build-stage /usr/src/app/dist/frontend /usr/share/nginx/html

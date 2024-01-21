@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #docker logout
-#docker login
+docker login
 
 docker-compose down
 docker build --cache-from mintosbackend . -t mintosbackend:latest

@@ -13,7 +13,6 @@ import com.example.mintos.backend.models.responses.TransactionResponseDto;
 import com.example.mintos.backend.repositories.AccountRepository;
 import com.example.mintos.backend.repositories.TransactionRepository;
 
-import static com.example.mintos.backend.services.CurrencyExchangeService.getRate;
 import static com.example.mintos.backend.utils.StaticHelpers.getPageable;
 
 import jakarta.transaction.Transactional;
@@ -37,18 +36,21 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final ResponseMapper responseMapper;
+    private final CurrencyExchangeService exchangeService;
 
     @Autowired
     AccountService(
             AccountRepository accountRepository,
             TransactionRepository transactionRepository,
             TransactionService transactionService,
-            ResponseMapper responseMapper
+            ResponseMapper responseMapper,
+            CurrencyExchangeService exchangeService
     ) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.transactionService = transactionService;
         this.responseMapper = responseMapper;
+        this.exchangeService = exchangeService;
     }
 
     public Page<AccountResponseDto> getAccounts(AccountGetRequestDto request) {
@@ -70,7 +72,7 @@ public class AccountService {
                 .findById(depositRequestDto.getId())
                 .orElseThrow(() -> new AccountNotFoundException(ACCOUNT404, depositRequestDto.getId()));
 
-        Double rate = getRate(depositRequestDto.getCurrency(), account.getCurrency());
+        Double rate = exchangeService.getRate(depositRequestDto.getCurrency(), account.getCurrency());
 
         account.setAmount(account.getAmount() + depositRequestDto.getAmount() * rate);
         account = accountRepository.saveAndFlush(account);
@@ -95,7 +97,7 @@ public class AccountService {
 
         checkTargetCurrency(Currency.getCurrency(transferRequestDto.getCurrency()), target);
 
-        Double exchangeRate = getRate(target.getCurrency(), source.getCurrency());
+        Double exchangeRate = exchangeService.getRate(target.getCurrency(), source.getCurrency());
         Double sourceAmount = transferRequestDto.getAmount() * exchangeRate;
 
         target.setAmount(target.getAmount() + transferRequestDto.getAmount());

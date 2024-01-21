@@ -22,7 +22,7 @@ services:
   app:
     image: ansism/mintosbackend:latest
     environment:
-      -
+      API_KEY: fca_live_A3k7IjJEm4g5IOLaqB2e9VWIBVM5HRAhv1J2hxP0
     ports:
       - "8089:8089"
     depends_on:

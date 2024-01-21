@@ -20,10 +20,10 @@ public class CurrencyExchangeService {
     private static final String API_RETURN_NULL = "Exchange api returned null.";
 
     @Value("${API_KEY}")
-    private static String API_KEY;
+    private String API_KEY;
 
 
-    public static Double getRate(Currency targetCurrency, Currency sourceCurrency) {
+    public Double getRate(Currency targetCurrency, Currency sourceCurrency) {
 
         if (targetCurrency.equals(sourceCurrency)) {
             return 1.00000;
@@ -50,7 +50,7 @@ public class CurrencyExchangeService {
         return baseCurrencyToUSD / targetCurrencyToUSD;
     }
 
-    private static ResponseEntity<RatesDto> getCurrencyExchangeRates(Currency base, Currency target) {
+    private ResponseEntity<RatesDto> getCurrencyExchangeRates(Currency base, Currency target) {
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(API_URL)

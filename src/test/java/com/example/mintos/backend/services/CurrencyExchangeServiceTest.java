@@ -36,7 +36,7 @@ public class CurrencyExchangeServiceTest {
         Currency source = Currency.USD;
         Currency target = Currency.USD;
 
-        double rate = CurrencyExchangeService.getRate(target, source);
+        double rate = currencyExchangeService.getRate(target, source);
 
         assertEquals(1.00000, rate, "Rate should be 1 when currencies are the same");
     }
@@ -52,14 +52,14 @@ public class CurrencyExchangeServiceTest {
             ratesMap.put(source.getCurrencyCode(), 0.85);
             ratesDto.setData(ratesMap);
 
-            double rate = CurrencyExchangeService.getRate(target, source);
+            double rate = currencyExchangeService.getRate(target, source);
 
             assertEquals(Currency.EUR.getExchangeRateToUSD() / Currency.USD.getExchangeRateToUSD(), rate, "The rate should match the values in enum");
     }
 
     @Test
     public void testGetDefaultRate() {
-        double rate = CurrencyExchangeService.getRate(Currency.BRL, Currency.EUR);
+        double rate = currencyExchangeService.getRate(Currency.BRL, Currency.EUR);
         assertEquals(Currency.BRL.getExchangeRateToUSD() / Currency.EUR.getExchangeRateToUSD(), rate);
     }
 

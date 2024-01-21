@@ -8,9 +8,6 @@ WORKDIR /mintos-backend
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Use a separate build stage to build the application
-#FROM dependencies AS build
-
 # Copy the source code to the container
 COPY src ./src
 
@@ -23,7 +20,7 @@ WORKDIR /mintos-backend
 COPY --from=build /mintos-backend/target/*.jar backend.jar
 
 # Expose the application port
-EXPOSE 8090
+EXPOSE 8089
 
 # Start the application
 CMD ["java", "-jar", "backend.jar"]
