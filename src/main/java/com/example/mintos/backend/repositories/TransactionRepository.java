@@ -17,5 +17,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     @Query(value = "SELECT * FROM transaction WHERE account_from = :accountId OR account_to = "
                    + ":accountId ORDER BY created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<Transaction> findTransactionsWithOffsetAndLimit(Long accountId, Integer limit, Integer offset);
-
 }

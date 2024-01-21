@@ -11,10 +11,14 @@ import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTableModule} from "@angular/material/table";
+import { NameInputComponent } from './name-input/name-input.component';
+import { RegisterAccountComponent } from './register-account/register-account.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NameInputComponent,
+    RegisterAccountComponent
   ],
     imports: [
         BrowserModule,

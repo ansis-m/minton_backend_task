@@ -1,0 +1,10 @@
+.aligned-form button {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  margin-bottom: 15px;
+}
+
+.aligned-form mat-form-field {
+  margin-bottom: 0;
+}

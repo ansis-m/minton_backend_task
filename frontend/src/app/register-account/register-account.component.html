@@ -1,0 +1,21 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Register an account
+    </mat-panel-title>
+    <mat-panel-description>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="aligned-form">
+    <form [formGroup]="formGroup" (ngSubmit)="add(formGroup.value)">
+      <mat-form-field>
+        <mat-label>Select Currency</mat-label>
+        <mat-select formControlName="selectedCurrency">
+          <mat-option *ngFor="let currency of currencyEntries"
+                      [value]="currency[0]">{{currency[0]}} {{currency[1]}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Add Account</button>
+    </form>
+  </div>
+</mat-expansion-panel>

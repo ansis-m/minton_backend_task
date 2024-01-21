@@ -18,7 +18,7 @@ public class AccountGetRequestDto {
     @JsonDeserialize(using = CurrencyDeserializer.class)
     private Currency currency;
 
-    @Schema(description ="Page index starting from 0, default is 20")
+    @Schema(description ="Page index starting from 0, default is 0")
     private Integer page;
 
     @Schema(description ="Size of the page, default is 20")

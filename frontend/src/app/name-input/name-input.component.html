@@ -1,0 +1,16 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Register a client
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+    <div class="aligned-form">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" ngModel placeholder="Name">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Register</button>
+    </div>
+  </form>
+</mat-expansion-panel>

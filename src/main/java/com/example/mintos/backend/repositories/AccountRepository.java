@@ -19,5 +19,4 @@ public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpec
 
     @Query("select a from Account a where a.client.id = ?1 and a.currency = ?2")
     Page<Account> findByClientIdAndCurrency(Long clientId, Currency currency, Pageable pageable);
-
 }

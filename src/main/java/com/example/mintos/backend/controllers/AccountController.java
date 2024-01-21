@@ -31,7 +31,7 @@ public class AccountController {
     }
 
     @PostMapping("")
-    @Operation(summary = "Gets all accounts for a particular user (id) with optional pagination,"
+    @Operation(summary = "Gets all accounts for a particular user (id),"
                          + " if page or size is null first page with 20 results is returned.")
     public ResponseEntity<Page<AccountResponseDto>> getAccounts(@RequestBody AccountGetRequestDto request) {
         return ResponseEntity.ok(accountService.getAccounts(request));

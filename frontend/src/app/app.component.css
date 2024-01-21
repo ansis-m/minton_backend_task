@@ -5,3 +5,25 @@
 .header{
   height: 30px;
 }
+
+.aligned-form {
+  margin-right: 10px;
+}
+
+.aligned-form button {
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 15px;
+  margin-right: 10px;
+}
+
+.aligned-form mat-form-field {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+.aligned-input{
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 10px;
+}
