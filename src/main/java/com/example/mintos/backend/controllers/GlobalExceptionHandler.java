@@ -4,6 +4,7 @@ import com.example.mintos.backend.exceptions.AccountNotFoundException;
 import com.example.mintos.backend.exceptions.CurrenciesNotMatchingException;
 import com.example.mintos.backend.exceptions.CurrencyNotSupportedException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,6 +25,15 @@ public class GlobalExceptionHandler {
         body.put("account id", ex.getId());
         body.put("path", request.getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Object> handleDataAccessException(DataAccessException ex, HttpServletRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Database error occurred");
+        body.put("path", request.getRequestURI());
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(CurrencyNotSupportedException.class)

@@ -4,6 +4,7 @@ import com.example.mintos.backend.models.requests.ClientCreateRequestDto;
 import com.example.mintos.backend.models.responses.ClientResponseDto;
 import com.example.mintos.backend.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class ClientController {
     @Operation(summary = "Returns all clients and all associated accounts. Optional params page and size. "
                          + "If page or size is null returns first page with 20 results.")
     //For an actual application filtering should be implemented
-    ResponseEntity<Page<ClientResponseDto>> getClients(@RequestParam(required = false) Integer page,
-                                                       @RequestParam(required = false) Integer size)
+    ResponseEntity<Page<ClientResponseDto>> getClients(@RequestParam(required = false) @Min(0) Integer page,
+                                                       @RequestParam(required = false) @Min(0) Integer size)
     {
         return ResponseEntity.ok(clientService.getClients(page, size));
     }

@@ -15,8 +15,6 @@ public interface ResponseMapper {
 
     TransactionResponseDto map(Transaction transaction);
 
-    List<TransactionResponseDto> map(List<Transaction> transactions);
-
     AccountResponseDto map(Account account);
 
     ClientResponseDto map(Client client);

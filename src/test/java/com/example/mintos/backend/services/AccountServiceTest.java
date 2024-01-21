@@ -2,13 +2,16 @@ package com.example.mintos.backend.services;
 
 import com.example.mintos.backend.controllers.SerializablePageMock;
 import com.example.mintos.backend.entities.Account;
+import com.example.mintos.backend.entities.Transaction;
 import com.example.mintos.backend.enums.Currency;
 import com.example.mintos.backend.exceptions.AccountNotFoundException;
 import com.example.mintos.backend.mappers.ResponseMapper;
 import com.example.mintos.backend.models.requests.AccountGetRequestDto;
 import com.example.mintos.backend.models.requests.DepositRequestDto;
 import com.example.mintos.backend.models.responses.AccountResponseDto;
+import com.example.mintos.backend.models.responses.TransactionResponseDto;
 import com.example.mintos.backend.repositories.AccountRepository;
+import com.example.mintos.backend.repositories.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +44,9 @@ class AccountServiceTest {
 
     @Mock
     private TransactionService transactionService;
+
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private AccountService accountService;
@@ -187,6 +194,29 @@ class AccountServiceTest {
         when(responseMapper.map(account)).thenReturn(expectedResponse);
 
         assertThrows(RuntimeException.class, () -> accountService.addFunds(depositRequestDto));
+    }
+
+    @Test
+    void testGetTransactions() {
+        Long accountId = 1L;
+        Integer limit = 10;
+        Integer offset = 0;
+
+        Transaction mockTransaction = new Transaction();
+
+        TransactionResponseDto mockResponseDto = new TransactionResponseDto();
+
+        when(transactionRepository.findTransactionsWithOffsetAndLimit(accountId, limit, offset)).thenReturn(List.of(mockTransaction));
+        when(responseMapper.map(mockTransaction)).thenReturn(mockResponseDto);
+
+        List<TransactionResponseDto> result = accountService.getTransactions(accountId, limit, offset);
+
+        assertNotNull(result);
+        verify(transactionRepository, times(1)).findTransactionsWithOffsetAndLimit(accountId, limit, offset);
+        verify(responseMapper, times(1)).map(mockTransaction);
+        assertFalse(result.isEmpty());
+        assertEquals(mockResponseDto, result.get(0));
+
     }
 
 

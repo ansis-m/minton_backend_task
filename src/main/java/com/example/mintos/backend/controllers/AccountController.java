@@ -9,6 +9,7 @@ import com.example.mintos.backend.models.responses.TransactionResponseDto;
 import com.example.mintos.backend.services.AccountService;
 import com.example.mintos.backend.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,9 @@ public class AccountController {
     @GetMapping("/transactions")
     @Operation(summary = "Get transactions for a particular account (id)."
                          + " Results provided with mandatory limit and offset.")
-    public ResponseEntity<List<TransactionResponseDto>> getTransactions(@RequestParam Long accountId,
-                                                                        @RequestParam Integer limit,
-                                                                        @RequestParam Integer offset)
+    public ResponseEntity<List<TransactionResponseDto>> getTransactions(@RequestParam @Min(1) Long accountId,
+                                                                        @RequestParam @Min(0) Integer limit,
+                                                                        @RequestParam @Min(0) Integer offset)
     {
         List<TransactionResponseDto> transactions = accountService.getTransactions(accountId, limit, offset);
         return ResponseEntity.ok(transactions);

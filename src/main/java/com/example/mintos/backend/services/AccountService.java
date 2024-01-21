@@ -82,7 +82,10 @@ public class AccountService {
     }
 
     public List<TransactionResponseDto> getTransactions(Long accountId, Integer limit, Integer offset) {
-        return responseMapper.map(transactionRepository.findTransactionsWithOffsetAndLimit(accountId, limit, offset));
+        return transactionRepository.findTransactionsWithOffsetAndLimit(accountId, limit, offset)
+                                    .stream()
+                                    .map(responseMapper::map)
+                                    .toList();
     }
 
     @Transactional
