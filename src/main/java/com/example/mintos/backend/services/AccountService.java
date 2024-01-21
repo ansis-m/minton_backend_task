@@ -75,6 +75,7 @@ public class AccountService {
         Double rate = exchangeService.getRate(depositRequestDto.getCurrency(), account.getCurrency());
 
         account.setAmount(account.getAmount() + depositRequestDto.getAmount() * rate);
+        checkBalance(account);
         account = accountRepository.saveAndFlush(account);
         transactionService.createTransaction(account, depositRequestDto.getAmount(), depositRequestDto.getCurrency(), rate);
         return responseMapper.map(account);
