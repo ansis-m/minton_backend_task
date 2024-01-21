@@ -30,6 +30,7 @@
     <app-register-account
       *ngIf="this.selectedClient"
       [currencyEntries]="currencyEntries"
+      [client]="selectedClient"
       (addAccount)="addAccount($event)"
     ></app-register-account>
     <mat-expansion-panel *ngIf="this.selectedClient && accounts && accounts.length">
@@ -122,10 +123,10 @@
     <mat-expansion-panel *ngIf="this.selectedAccount">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Add/Withdraw funds
+          Add or Withdraw funds
         </mat-panel-title>
         <mat-panel-description>
-          {{selectedAccount.currency}} {{selectedAccount.amount}}
+          selected account {{selectedAccount.currency}} {{selectedAccount.amount}} id: {{selectedAccount.id}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div class="aligned-form">
@@ -161,33 +162,40 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngIf="targetClients.length; else noClientsBlock">
-        <mat-form-field>
-          <mat-label>Select recipient</mat-label>
-          <mat-select [(ngModel)]="targetClient" (ngModelChange)="onClientChange($event)">
-            <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}}
-              id: {{client.id}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div *ngIf="selectedClient && targetClient">
-          <mat-form-field *ngIf="targetAccounts?.length; else noAccountBlock">
-            <mat-label>Select recipient account</mat-label>
-            <mat-select [(ngModel)]="targetClient.selectedAccount">
-              <mat-option *ngFor="let account of targetAccounts"
-                          [value]="account">{{account.currency}} {{account.amount}}</mat-option>
+        <div class="aligned-form">
+          <mat-form-field>
+            <mat-label>Select recipient</mat-label>
+            <mat-select [(ngModel)]="targetClient" (ngModelChange)="onClientChange($event)">
+              <mat-option *ngFor="let client of targetClients" [value]="client">{{client.name}}
+                id: {{client.id}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <div *ngIf="selectedClient && targetClient">
+            <mat-form-field *ngIf="targetAccounts?.length; else noAccountBlock">
+              <mat-label>Select recipient account</mat-label>
+              <mat-select [(ngModel)]="targetClient.selectedAccount">
+                <mat-option *ngFor="let account of targetAccounts"
+                            [value]="account">{{account.currency}} {{account.amount}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
           <div *ngIf="targetAccount">
-            <form #form="ngForm">
-              <input type="number" name="amount" ngModel required placeholder="0.00">
-              <mat-form-field>
-                <mat-label>Select transfer currency</mat-label>
-                <mat-select [(ngModel)]="transferCurrency" name="selectedCurrency">
-                  <mat-option *ngFor="let currency of currencyEntries"
-                              [value]="currency[0]">{{currency[0]}} {{currency[1]}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <button mat-button color="primary" type="submit" (click)="transfer(form)">Transfer</button>
-            </form>
+            <div class="aligned-form">
+              <form #form="ngForm">
+                <mat-form-field>
+                  <mat-label>Transfer amount</mat-label>
+                  <input matInput type="number" name="amount" ngModel placeholder="0.00">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Select transfer currency</mat-label>
+                  <mat-select [(ngModel)]="transferCurrency" name="selectedCurrency">
+                    <mat-option *ngFor="let currency of currencyEntries"
+                                [value]="currency[0]">{{currency[0]}} {{currency[1]}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit" (click)="transfer(form)">Transfer</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

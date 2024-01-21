@@ -1,7 +1,7 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>
-    <mat-panel-title>
-      Register an account
+    <mat-panel-title *ngIf="client">
+      Add account for {{client.name}}
     </mat-panel-title>
     <mat-panel-description>
     </mat-panel-description>

@@ -46,7 +46,8 @@ export class AppComponent implements OnInit{
       next: (response) => {
         form.resetForm();
       },
-      error: (error) => {
+      error: (error: any) => {
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
   }
@@ -96,7 +97,8 @@ export class AppComponent implements OnInit{
           }
         })
       },
-      error: (error) => {
+      error: (error: any) => {
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
   }
@@ -110,23 +112,23 @@ export class AppComponent implements OnInit{
       next: (response) => {
         this.fetchAccounts(this.selectedClient);
       },
-      error: error => {
-        console.error(error);
+      error: (error: any) => {
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
   }
 
   addToAccount(form: NgForm, withdraw: boolean = false) {
     let amount = form.value.amount * (withdraw? -1 : 1);
-    if (!this.selectedAccount || this.selectedAccount.amount + amount < 0) {
+    if (!this.selectedAccount) {
       return;
     }
     this.accountService.addFunds(this.selectedAccount, amount, form.value.selectedCurrency).subscribe({
       next: (response) => {
         this.fetchAccounts(this.selectedClient);
       },
-      error: (error) => {
-        console.error(error);
+      error: (error: any) => {
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
   }
@@ -144,8 +146,8 @@ export class AppComponent implements OnInit{
       next: (response) => {
         this.transactions = response;
       },
-      error: (error) => {
-        console.error(error);
+      error: (error: any) => {
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
 
@@ -202,7 +204,7 @@ export class AppComponent implements OnInit{
         this.fetchAccounts(this.targetClient);
       },
       error: (error: any) => {
-        console.error(error);
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     })
 
@@ -232,7 +234,7 @@ export class AppComponent implements OnInit{
         }
       },
       error: (error: any) => {
-        console.error(error);
+        window.alert('Error: ' + JSON.stringify(error.error.message));
       }
     });
   }
