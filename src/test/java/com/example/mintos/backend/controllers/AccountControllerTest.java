@@ -70,7 +70,7 @@ public class AccountControllerTest {
 
     @Test
     public void testCreateAccount() throws Exception {
-        // Similar structure as above
+
     }
 
     private Page<AccountResponseDto> getAccountPage() {

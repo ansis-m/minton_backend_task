@@ -51,6 +51,6 @@ class CurrencyTest {
     void verifyEnumValues() {
         assertEquals("Euro", Currency.EUR.getCurrencyName());
         assertEquals("EUR", Currency.EUR.getCurrencyCode());
-        assertEquals(1.09, Currency.EUR.getExchangeRateToUSD());
+        assertEquals(1.09, Currency.EUR.getDefaultExchangeRateToUSD());
     }
 }

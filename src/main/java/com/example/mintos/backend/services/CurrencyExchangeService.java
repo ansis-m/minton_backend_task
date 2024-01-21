@@ -45,8 +45,8 @@ public class CurrencyExchangeService {
     }
 
     private static Double getDefaultRate(Currency base, Currency target) {
-        double baseCurrencyToUSD = base.getExchangeRateToUSD();
-        double targetCurrencyToUSD = target.getExchangeRateToUSD();
+        double baseCurrencyToUSD = base.getDefaultExchangeRateToUSD();
+        double targetCurrencyToUSD = target.getDefaultExchangeRateToUSD();
         return baseCurrencyToUSD / targetCurrencyToUSD;
     }
 

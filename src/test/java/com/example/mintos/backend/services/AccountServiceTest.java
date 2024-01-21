@@ -8,6 +8,7 @@ import com.example.mintos.backend.exceptions.AccountNotFoundException;
 import com.example.mintos.backend.mappers.ResponseMapper;
 import com.example.mintos.backend.models.requests.AccountGetRequestDto;
 import com.example.mintos.backend.models.requests.DepositRequestDto;
+import com.example.mintos.backend.models.requests.TransferRequestDto;
 import com.example.mintos.backend.models.responses.AccountResponseDto;
 import com.example.mintos.backend.models.responses.TransactionResponseDto;
 import com.example.mintos.backend.repositories.AccountRepository;
@@ -216,7 +217,73 @@ class AccountServiceTest {
         verify(responseMapper, times(1)).map(mockTransaction);
         assertFalse(result.isEmpty());
         assertEquals(mockResponseDto, result.get(0));
+    }
 
+    @Test
+    void testTransferSuccess() {
+        Long sourceId = 1L;
+        Long targetId = 2L;
+        Double amount = 100.0;
+        Currency currency = Currency.USD;
+        Double exchangeRate = 2.0;
+        Double sourceInitialAmount = 200.0;
+        Double targetInitialAmount = 150.0;
+
+        Account source = new Account() {{
+            setId(sourceId);
+            setAmount(sourceInitialAmount);
+            setCurrency(Currency.EUR);
+        }};
+
+
+        Account target = new Account() {{
+            setId(targetId);
+            setAmount(targetInitialAmount);
+            setCurrency(Currency.USD);
+        }};
+
+
+        TransferRequestDto transferRequestDto = new TransferRequestDto() {{
+            setSourceId(sourceId);
+            setTargetId(targetId);
+            setAmount(amount);
+            setCurrency(currency.toString());
+        }};
+
+
+        when(accountRepository.findById(sourceId)).thenReturn(Optional.of(source));
+        when(accountRepository.findById(targetId)).thenReturn(Optional.of(target));
+        when(exchangeService.getRate(Currency.USD, Currency.EUR)).thenReturn(exchangeRate);
+
+        TransactionResponseDto expectedResponse = new TransactionResponseDto();
+        when(transactionService.createTransaction(target, source, transferRequestDto, exchangeRate))
+                .thenReturn(new Transaction());
+        when(responseMapper.map(any(Transaction.class))).thenReturn(expectedResponse);
+
+        TransactionResponseDto response = accountService.transfer(transferRequestDto);
+
+        verify(accountRepository, times(2)).saveAndFlush(accountCaptor.capture());
+        List<Account> capturedAccounts = accountCaptor.getAllValues();
+
+        Account capturedSource = capturedAccounts.get(0);
+        Account capturedTarget = capturedAccounts.get(1);
+        assertEquals(sourceInitialAmount - amount * exchangeRate, capturedSource.getAmount());
+        assertEquals(targetInitialAmount + amount, capturedTarget.getAmount());
+
+        assertEquals(expectedResponse, response);
+        verify(exchangeService).getRate(Currency.USD, Currency.EUR);
+        verify(accountRepository).saveAndFlush(source);
+        verify(accountRepository).saveAndFlush(target);
+    }
+
+    @Test
+    void testTransferSourceAccountNotFound() {
+        Long sourceId = 1L;
+        TransferRequestDto transferRequestDto = new TransferRequestDto();
+        transferRequestDto.setSourceId(sourceId);
+        when(accountRepository.findById(sourceId)).thenReturn(Optional.empty());
+
+        assertThrows(AccountNotFoundException.class, () -> accountService.transfer(transferRequestDto));
     }
 
 

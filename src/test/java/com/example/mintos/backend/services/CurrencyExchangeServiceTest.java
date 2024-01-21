@@ -54,13 +54,13 @@ public class CurrencyExchangeServiceTest {
 
             double rate = currencyExchangeService.getRate(target, source);
 
-            assertEquals(Currency.EUR.getExchangeRateToUSD() / Currency.USD.getExchangeRateToUSD(), rate, "The rate should match the values in enum");
+            assertEquals(Currency.EUR.getDefaultExchangeRateToUSD() / Currency.USD.getDefaultExchangeRateToUSD(), rate, "The rate should match the values in enum");
     }
 
     @Test
     public void testGetDefaultRate() {
         double rate = currencyExchangeService.getRate(Currency.BRL, Currency.EUR);
-        assertEquals(Currency.BRL.getExchangeRateToUSD() / Currency.EUR.getExchangeRateToUSD(), rate);
+        assertEquals(Currency.BRL.getDefaultExchangeRateToUSD() / Currency.EUR.getDefaultExchangeRateToUSD(), rate);
     }
 
     @Test

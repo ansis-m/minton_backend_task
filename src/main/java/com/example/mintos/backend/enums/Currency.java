@@ -42,13 +42,13 @@ public enum Currency {
 
     private final String currencyName;
     private final String currencyCode;
-    private final double exchangeRateToUSD;
+    private final double defaultExchangeRateToUSD;
     private static final String CURRENCY_NOT_SUPPORTED = " currency is not supported!";
 
     Currency(String currencyName, String currencyCode, double exchangeRateToUSD) {
         this.currencyName = currencyName;
         this.currencyCode = currencyCode;
-        this.exchangeRateToUSD = exchangeRateToUSD;
+        this.defaultExchangeRateToUSD = exchangeRateToUSD;
     }
 
     public static Currency getCurrency(String currencyIdentifier) {
@@ -77,7 +77,7 @@ public enum Currency {
         return currencyCode;
     }
 
-    public double getExchangeRateToUSD() {
-        return exchangeRateToUSD;
+    public double getDefaultExchangeRateToUSD() {
+        return defaultExchangeRateToUSD;
     }
 }
